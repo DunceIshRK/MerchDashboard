@@ -250,10 +250,10 @@ async function exportJPG() {
   const allRows = area.querySelectorAll('tr');
   const originalDisplays = []; allRows.forEach(r => { originalDisplays.push(r.style.display); r.style.display = 'table-row'; });
 
-  const canvas = await html2canvas(area, { scale: 2, useCORS: true, width: area.scrollWidth, windowWidth: area.scrollWidth });
+  const canvas = await html2canvas(area, { scale: 2.5, useCORS: true, width: area.scrollWidth, windowWidth: area.scrollWidth });
   const link = document.createElement('a');
   link.download = `Performance_Report_${new Date().toLocaleDateString()}.jpg`;
-  link.href = canvas.toDataURL('image/jpeg', 0.8);
+  link.href = canvas.toDataURL('image/jpeg', 0.9);
   link.click();
 
   allRows.forEach((r, i) => r.style.display = originalDisplays[i]);
@@ -270,8 +270,8 @@ async function exportPDF() {
   const allRows = area.querySelectorAll('tr');
   const originalDisplays = []; allRows.forEach(r => { originalDisplays.push(r.style.display); r.style.display = 'table-row'; });
 
-  const canvas = await html2canvas(area, { scale: 1.5, useCORS: true, width: area.scrollWidth, windowWidth: area.scrollWidth });
-  const imgData = canvas.toDataURL('image/jpeg', 0.7);
+  const canvas = await html2canvas(area, { scale: 2, useCORS: true, width: area.scrollWidth, windowWidth: area.scrollWidth });
+  const imgData = canvas.toDataURL('image/jpeg', 0.);
   const pdf = new jsPDF('p', 'mm', 'a4');
   const pdfWidth = pdf.internal.pageSize.getWidth();
   const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
