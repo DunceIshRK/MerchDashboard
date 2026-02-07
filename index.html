@@ -47,28 +47,23 @@ h3{ margin:0 0 12px; color:var(--brand); font-size:0.95rem; border-bottom:1px so
 label{font-size:.75rem;font-weight:600;color:#64748b}
 input,select{ width:100%; padding:12px; margin-top:5px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:14px; background: #fff; }
 
-/* UPDATED: Centered 50% Submit Button */
 #submitBtn {
-  width: 50%; 
-  padding: 18px; 
-  background: var(--brand); 
-  color: #fff; 
-  border: none; 
-  border-radius: 12px;
-  font-weight: bold; 
-  font-size: 1rem; 
-  cursor: pointer; 
-  margin: 20px auto; /* auto centers the block element */
-  display: block;   /* essential for centering with auto margin */
+  width: 50%; padding: 18px; background: var(--brand); color: #fff; 
+  border: none; border-radius: 12px; font-weight: bold; font-size: 1rem; 
+  cursor: pointer; margin: 20px auto; display: block;
 }
 
-/* Dashboard Export Buttons */
+/* Dashboard Controls */
 .export-container { display: flex; gap: 10px; margin-bottom: 12px; }
 .export-btn{
   flex: 1; padding:15px; background:var(--whatsapp);
   color:#fff; border:none; border-radius:10px;
   font-weight:bold; cursor:pointer; font-size: 12px;
-  transition: 0.2s;
+}
+
+.control-btn {
+  flex: 1; padding: 10px; background: #64748b; color: white; 
+  border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 11px;
 }
 
 /* Dashboard Table */
@@ -142,10 +137,16 @@ td{padding:10px; border-bottom:1px solid #f1f5f9}
   <button class="export-btn" style="background:#1e293b" onclick="exportPDF()">📄 DOWNLOAD PDF REPORT</button>
 </div>
 
-<div class="filters">
-<select id="fState"></select>
-<select id="fCat"></select>
-<input id="fMerchant" placeholder="Search Merchant Name or ID">
+<div style="display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-end; flex-wrap: wrap;">
+  <div style="flex: 0 0 65%; display: flex; gap: 8px;">
+    <select id="fState" style="flex: 1; padding: 10px; border-radius: 8px; border: 1.5px solid #cbd5e1;"></select>
+    <select id="fCat" style="flex: 1; padding: 10px; border-radius: 8px; border: 1.5px solid #cbd5e1;"></select>
+    <input id="fMerchant" placeholder="Search..." style="flex: 1.5; padding: 10px; border-radius: 8px; border: 1.5px solid #cbd5e1;">
+  </div>
+  <div style="flex: 1; display: flex; gap: 5px;">
+    <button class="control-btn" onclick="expandAllRows()">[+] Expand</button>
+    <button class="control-btn" style="background: #94a3b8;" onclick="collapseAllRows()">[-] Collapse</button>
+  </div>
 </div>
 
 <div class="table-wrap" id="capture-area">
@@ -243,17 +244,28 @@ function toggle(cls,row){
   row.classList.toggle('expanded');
 }
 
+/* ---------------- EXPAND / COLLAPSE ALL ---------------- */
+function expandAllRows() {
+  document.querySelectorAll('.row-metric, .row-sub').forEach(r => r.style.display = 'table-row');
+  document.querySelectorAll('.row-merchant, .row-metric').forEach(r => r.classList.add('expanded'));
+}
+
+function collapseAllRows() {
+  document.querySelectorAll('.row-metric, .row-sub').forEach(r => r.style.display = 'none');
+  document.querySelectorAll('.row-merchant, .row-metric').forEach(r => r.classList.remove('expanded'));
+}
+
 /* ---------------- EXPORT ---------------- */
 async function exportJPG() {
   const area = document.getElementById('capture-area');
-  const btn = event.target; btn.innerText = "Optimizing for WhatsApp...";
+  const btn = event.target; btn.innerText = "Processing...";
   const allRows = area.querySelectorAll('tr');
   const originalDisplays = []; allRows.forEach(r => { originalDisplays.push(r.style.display); r.style.display = 'table-row'; });
 
-  const canvas = await html2canvas(area, { scale: 2.5, useCORS: true, width: area.scrollWidth, windowWidth: area.scrollWidth });
+  const canvas = await html2canvas(area, { scale: 2, useCORS: true, width: area.scrollWidth, windowWidth: area.scrollWidth });
   const link = document.createElement('a');
-  link.download = `Performance_Report_${new Date().toLocaleDateString()}.jpg`;
-  link.href = canvas.toDataURL('image/jpeg', 0.9);
+  link.download = `Report_${new Date().toLocaleDateString()}.jpg`;
+  link.href = canvas.toDataURL('image/jpeg', 0.8);
   link.click();
 
   allRows.forEach((r, i) => r.style.display = originalDisplays[i]);
@@ -263,15 +275,15 @@ async function exportJPG() {
 async function exportPDF() {
   const { jsPDF } = window.jspdf;
   const area = document.getElementById('capture-area');
-  const btn = event.target; btn.innerText = "Generating PDF...";
+  const btn = event.target; btn.innerText = "Processing PDF...";
   document.getElementById('gen-date').innerText = new Date().toLocaleString();
   document.getElementById('pdf-header').style.display = 'block';
 
   const allRows = area.querySelectorAll('tr');
   const originalDisplays = []; allRows.forEach(r => { originalDisplays.push(r.style.display); r.style.display = 'table-row'; });
 
-  const canvas = await html2canvas(area, { scale: 2, useCORS: true, width: area.scrollWidth, windowWidth: area.scrollWidth });
-  const imgData = canvas.toDataURL('image/jpeg', 0.);
+  const canvas = await html2canvas(area, { scale: 1.5, useCORS: true, width: area.scrollWidth, windowWidth: area.scrollWidth });
+  const imgData = canvas.toDataURL('image/jpeg', 0.7);
   const pdf = new jsPDF('p', 'mm', 'a4');
   const pdfWidth = pdf.internal.pageSize.getWidth();
   const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
