@@ -1,194 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Merchant Performance Portal</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <style>
-        :root { --brand: #ff9900; --bg: #f8fafc; --text: #1e293b; --success: #166534; --danger: #991b1b; --whatsapp: #075e54; }
-        * { -webkit-font-smoothing: antialiased; box-sizing: border-box; }
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding: 15px; color: var(--text); }
-        
-        /* Navigation Tabs */
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; position: sticky; top: 0; z-index: 100; background: var(--bg); padding-bottom: 10px; }
-        .tab-btn { flex: 1; padding: 12px; border: none; border-radius: 10px; background: #e2e8f0; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .tab-btn.active { background: var(--brand); color: white; box-shadow: 0 4px 12px rgba(255, 153, 0, 0.3); }
+<title>Merchant Performance Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+<style>
+:root{
+  --brand:#ff9900; --bg:#f8fafc; --text:#1e293b;
+  --success:#166534; --danger:#991b1b;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; padding:15px;
+  font-family:system-ui,-apple-system;
+  background:var(--bg); color:var(--text);
+}
 
-        /* Form Styling */
-        .section-card { background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-top: 4px solid var(--brand); }
-        h3 { margin: 0 0 15px 0; color: var(--brand); font-size: 1rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        label { display: block; margin-top: 10px; font-weight: 600; font-size: 0.8rem; color: #64748b; }
-        input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: #fff; }
-        
-        button#submitBtn { width: 100%; padding: 18px; background: var(--brand); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 20px; }
-        .export-btn { width: 100%; padding: 15px; background: var(--whatsapp); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-bottom: 15px; }
+/* Tabs */
+.tabs{display:flex;gap:10px;margin-bottom:15px}
+.tab-btn{
+  flex:1;padding:12px;border:0;border-radius:10px;
+  font-weight:700;cursor:pointer;background:#e2e8f0
+}
+.tab-btn.active{background:var(--brand);color:#fff}
+.tab-content{display:none}
+.tab-content.active{display:block}
 
-        /* Dashboard Table */
-        .table-wrapper { overflow-x: auto; background: white; border-radius: 14px; border: 1px solid #e2e8f0; }
-        table { border-collapse: collapse; width: 100%; min-width: 1100px; font-size: 12px; }
-        th { background: #1e293b; color: white; padding: 12px; text-align: left; }
-        td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; }
+/* KPI */
+.kpi-bar{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:10px;padding:10px
+}
+.kpi{
+  background:#fff;border-radius:12px;
+  padding:12px;text-align:center;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+  font-size:12px
+}
 
-        /* Accordion Styling */
-        .row-merchant { background: #fff7ed; cursor: pointer; font-weight: 800; color: #9a3412; border-left: 5px solid var(--brand); }
-        .row-parent { background: #ffffff; cursor: pointer; font-weight: 600; color: #334155; }
-        .row-child { display: none; background: #fafafa; color: #64748b; }
-        .indent { padding-left: 35px !important; }
-        .toggle-icon { display: inline-block; width: 18px; transition: 0.2s; font-style: normal; text-align: center; }
-        .expanded .toggle-icon { transform: rotate(90deg); }
-        
-        .badge { padding: 4px 8px; border-radius: 6px; font-weight: bold; font-size: 10px; display: inline-block; }
-        .grade-a { background: #dcfce7; color: var(--success); }
-        .grade-b { background: #fef9c3; color: #854d0e; }
-        .grade-c { background: #fee2e2; color: var(--danger); }
-    </style>
+/* Buttons */
+.export-btn{
+  width:100%;padding:14px;margin-bottom:10px;
+  border:0;border-radius:10px;
+  font-weight:700;background:#075e54;color:#fff;
+  cursor:pointer
+}
+.ctrl-btns{display:flex;gap:10px;margin-bottom:10px}
+.ctrl-btns button{
+  flex:1;padding:10px;border-radius:8px;
+  border:1px solid #cbd5e1;background:#fff;
+  font-weight:600;cursor:pointer
+}
+
+/* Table */
+.table-wrapper{
+  background:#fff;border-radius:14px;
+  overflow-x:auto;border:1px solid #e2e8f0
+}
+table{border-collapse:collapse;width:100%;min-width:1000px;font-size:12px}
+th{
+  background:#1e293b;color:#fff;
+  padding:12px;text-align:left
+}
+td{padding:10px;border-bottom:1px solid #f1f5f9}
+
+/* Rows */
+.row-merchant{
+  background:#fff7ed;font-weight:800;
+  color:#9a3412;cursor:pointer
+}
+.row-parent{background:#fff;cursor:pointer;font-weight:600}
+.row-child{background:#fafafa;color:#64748b}
+.indent{padding-left:30px}
+
+/* Icons */
+.toggle-icon{
+  display:inline-block;width:18px;
+  transition:.2s
+}
+tr.expanded .toggle-icon{transform:rotate(90deg)}
+
+/* Grades */
+.badge{
+  padding:4px 8px;border-radius:6px;
+  font-size:10px;font-weight:800
+}
+.grade-a{background:#dcfce7;color:var(--success)}
+.grade-b{background:#fef9c3;color:#854d0e}
+.grade-c{background:#fee2e2;color:var(--danger)}
+
+@media(max-width:768px){
+  table{font-size:11px}
+}
+</style>
 </head>
+
 <body>
 
 <div class="tabs">
-    <button class="tab-btn active" onclick="showTab('form', this)">ENTRY FORM</button>
-    <button class="tab-btn" onclick="showTab('db', this)">DASHBOARD</button>
+  <button class="tab-btn active" onclick="showTab('db',this)">DASHBOARD</button>
 </div>
 
-<div id="form" class="tab-content active">
-    <form id="merchantForm">
-        <div class="section-card">
-            <h3>Basic Merchant Information</h3>
-            <label>Month & Year</label><input type="month" name="monthYear" required>
-            <div class="grid">
-                <div><label>State</label><select name="state"><option>West Bengal</option><option>Odisha</option><option>North East</option></select></div>
-                <div><label>Category</label><select name="category"><option>Staples</option><option>HPC</option><option>F&V</option><option>Apparel</option><option>CDIT</option></select></div>
-            </div>
-            <div class="grid">
-                <div><label>Emp Name</label><input type="text" name="empName" placeholder="Full Name" required></div>
-                <div><label>Emp ID</label><input type="text" name="empId" placeholder="8-Digit ID" required></div>
-            </div>
-        </div>
+<div id="db" class="tab-content active">
 
-        <div class="section-card"><h3>1. Sales Performance</h3><div class="grid"><input type="number" step="0.01" name="salesTar" placeholder="Tar %"><input type="number" step="0.01" name="salesAch" placeholder="Ach %"></div></div>
-        <div class="section-card"><h3>2. RGM Performance</h3><div class="grid"><input type="number" step="0.01" name="rgmTar" placeholder="Tar Val"><input type="number" step="0.01" name="rgmAch" placeholder="Ach Val"></div></div>
-        <div class="section-card"><h3>3. Margin Management</h3><label>GP1</label><div class="grid"><input type="number" step="0.01" name="gp1Tar" placeholder="Tar %"><input type="number" step="0.01" name="gp1Ach" placeholder="Ach %"></div><label>GP2</label><div class="grid"><input type="number" step="0.01" name="gp2Tar" placeholder="Tar %"><input type="number" step="0.01" name="gp2Ach" placeholder="Ach %"></div></div>
-        <div class="section-card"><h3>4. Other Income</h3><div class="grid"><input type="number" name="otherIncTar" placeholder="Target"><input type="number" name="otherIncAch" placeholder="Achieved"></div></div>
-        <div class="section-card"><h3>5. Availability</h3><label>Cat A</label><div class="grid"><input type="number" name="availATar" placeholder="Tar %"><input type="number" name="availAAch" placeholder="Ach %"></div><label>Cat B</label><div class="grid"><input type="number" name="availBTar" placeholder="Tar %"><input type="number" name="availBAch" placeholder="Ach %"></div><label>Cat C</label><div class="grid"><input type="number" name="availCTar" placeholder="Tar %"><input type="number" name="availCAch" placeholder="Ach %"></div></div>
-        <div class="section-card"><h3>6. Inventory Management</h3><label>30D</label><div class="grid"><input type="number" name="inv30Tar" placeholder="Tar"><input type="number" name="inv30Ach" placeholder="Ach"></div><label>60D</label><div class="grid"><input type="number" name="inv60Tar" placeholder="Tar"><input type="number" name="inv60Ach" placeholder="Ach"></div><label>90D+</label><div class="grid"><input type="number" name="inv90Tar" placeholder="Tar"><input type="number" name="inv90Ach" placeholder="Ach"></div><label>Markdown %</label><div class="grid"><input type="number" step="0.01" name="markTar" placeholder="Tar %"><input type="number" step="0.01" name="markAch" placeholder="Ach %"></div></div>
-        <div class="section-card"><h3>7. Space Management (NIP)</h3><div class="grid"><input type="number" name="nipArticles" placeholder="Articles"><input type="number" name="nipValue" placeholder="Value"></div></div>
-        <div class="section-card"><h3>8. Own Brand Avail</h3><div class="grid"><input type="number" name="ownAvailTar" placeholder="Tar %"><input type="number" name="ownAvailAch" placeholder="Ach %"></div></div>
-        <div class="section-card"><h3>9. Promotions</h3><select name="promoType"><option value="">-- Select --</option><option>Promo A</option><option>Promo B</option></select><div class="grid"><input type="number" name="promoArticles" placeholder="Articles"><input type="number" name="promoValue" placeholder="Value"></div></div>
-        <div class="section-card"><h3>10. Price Benchmark</h3><div class="grid"><input type="number" name="priceBenchTar" placeholder="Tar %"><input type="number" name="priceBenchAch" placeholder="Ach %"></div></div>
-        <div class="section-card"><h3>11. New Store Launch</h3><div class="grid"><input type="number" name="newStoreSaleTar" placeholder="Sale Tar"><input type="number" name="newStoreSaleAch" placeholder="Sale Ach"></div></div>
+<button class="export-btn" onclick="exportHD()">📸 EXPORT DASHBOARD</button>
 
-        <button type="submit" id="submitBtn">SUBMIT REPORT</button>
-    </form>
+<div class="ctrl-btns">
+  <button onclick="expandAll()">➕ Expand All</button>
+  <button onclick="collapseAll()">➖ Collapse All</button>
 </div>
 
-<div id="db" class="tab-content">
-    <button class="export-btn" onclick="exportHD()">📸 EXPORT ULTRA-HD DASHBOARD (PNG)</button>
-    <div class="table-wrapper" id="capture-area">
-        <h2 style="padding:15px; margin:0;">Merchant Performance - 11 Sections</h2>
-        <table>
-            <thead><tr><th>Metric Name</th><th>Target</th><th>Achieved</th><th>% Age</th><th>Growth</th><th>Grade</th></tr></thead>
-            <tbody id="dashBody"></tbody>
-        </table>
-    </div>
+<div class="kpi-bar">
+  <div class="kpi">Grade A<br><b id="kpiA">0</b></div>
+  <div class="kpi">Grade B<br><b id="kpiB">0</b></div>
+  <div class="kpi">Grade C<br><b id="kpiC">0</b></div>
+  <div class="kpi">Total KPIs<br><b id="kpiT">0</b></div>
+</div>
+
+<div class="table-wrapper" id="capture-area">
+<table>
+<thead>
+<tr>
+<th>Metric</th><th>Target</th><th>Achieved</th>
+<th>%</th><th>Growth</th><th>Grade</th>
+</tr>
+</thead>
+<tbody id="dashBody"></tbody>
+</table>
+</div>
 </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwZZ7P9vUGdysmuVDjqM-eHIGbNfEB1AgAqUSkdBa9nf2VyMDiwhezrO-NmHyyIiFVK/exec';
+const scriptURL="https://script.google.com/macros/s/AKfycbwZZ7P9vUGdysmuVDjqM-eHIGbNfEB1AgAqUSkdBa9nf2VyMDiwhezrO-NmHyyIiFVK/exec";
 
-    function showTab(tabId, btn) {
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        btn.classList.add('active');
-        if(tabId === 'db') loadDashboard();
+function showTab(id,btn){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  loadDashboard();
+}
+
+function toggleGroup(cls,btn){
+  const rows=document.querySelectorAll('.'+cls);
+  const open=btn.classList.contains('expanded');
+  rows.forEach(r=>r.style.display=open?'none':'table-row');
+  btn.classList.toggle('expanded');
+}
+
+function calculateAch(t,a){return t>0?((a/t)*100).toFixed(1):0}
+function grade(p){return p>=95?'A':p>=80?'B':'C'}
+function gradeCls(g){return g==='A'?'grade-a':g==='B'?'grade-b':'grade-c'}
+
+function renderRow(cls,label,t,a,indent=false){
+  const p=calculateAch(t,a),g=grade(p);
+  return `<tr class="${cls}" style="display:none">
+  <td class="${indent?'indent':''}">${label}</td>
+  <td>${t||0}</td><td>${a||0}</td>
+  <td>${p}%</td><td>-</td>
+  <td><span class="badge ${gradeCls(g)}">${g}</span></td>
+  </tr>`;
+}
+
+function renderAccordion(master,id,label,key,subs){
+  let T=0,A=0,c=0,html='';
+  subs.forEach(s=>{
+    if(s.t||s.a){
+      T+=+s.t||0;A+=+s.a||0;c++;
+      html+=renderRow(`child-${id}-${key}`,s.l,s.t,s.a,true);
     }
+  });
+  return `
+<tr class="row-parent ${master}" style="display:none"
+ onclick="toggleGroup('child-${id}-${key}',this)">
+<td><i class="toggle-icon">▶</i> ${label}</td>
+<td>${(T/c||0).toFixed(1)}</td>
+<td>${(A/c||0).toFixed(1)}</td>
+<td>${calculateAch(T/c,A/c)}%</td><td>-</td><td>-</td>
+</tr>`+html;
+}
 
-    async function loadDashboard() {
-        const tbody = document.getElementById('dashBody');
-        tbody.innerHTML = '<tr><td colspan="6">Stitching 11 Sections...</td></tr>';
-        try {
-            const res = await fetch(scriptURL);
-            const logs = await res.json();
-            const headers = logs[0];
-            const dataRows = logs.slice(1);
+async function loadDashboard(){
+  const tb=document.getElementById('dashBody');
+  tb.innerHTML='<tr><td colspan="6">Loading…</td></tr>';
+  const r=await fetch(scriptURL); const j=await r.json();
+  const h=j[0],rows=j.slice(1),m={};
 
-            const merchants = {};
-            dataRows.forEach(row => {
-                const id = row[5];
-                if(!merchants[id]) merchants[id] = { name: row[4], cat: row[3], d: {} };
-                headers.forEach((h, i) => { if(row[i] !== "" && row[i] !== null) merchants[id].d[h] = row[i]; });
-            });
+  rows.forEach(r=>{
+    const id=r[5];
+    if(!m[id])m[id]={name:r[4],d:{}};
+    h.forEach((x,i)=>m[id].d[x]=r[i]);
+  });
 
-            let html = '';
-            for(const id in merchants) {
-                const m = merchants[id]; const d = m.d;
-                html += `<tr class="row-merchant" onclick="toggleGroup('m-${id}', this)"><td colspan="6"><i class="toggle-icon">▶</i> ${m.name} (${id})</td></tr>`;
-                
-                html += renderRow(`m-${id} row-parent`, "1. Sales Performance", d.Sales_Tar, d.Sales_Ach);
-                html += renderRow(`m-${id} row-parent`, "2. RGM Performance", d.RGM_Tar, d.RGM_Ach);
-                html += renderAccordion(`m-${id}`, id, "3. Margin Management", "marg", [{l:"GP1", t:d.GP1_Tar, a:d.GP1_Ach}, {l:"GP2", t:d.GP2_Tar, a:d.GP2_Ach}]);
-                html += renderRow(`m-${id} row-parent`, "4. Other Income", d.OtherInc_Tar, d.OtherInc_Ach);
-                html += renderAccordion(`m-${id}`, id, "5. Availability", "av", [{l:"Cat A", t:d.Avail_A_Tar, a:d.Avail_A_Ach}, {l:"Cat B", t:d.Avail_B_Tar, a:d.Avail_B_Ach}, {l:"Cat C", t:d.Avail_C_Tar, a:d.Avail_C_Ach}]);
-                html += renderAccordion(`m-${id}`, id, "6. Inventory Management", "inv", [{l:"30D", t:d.Inv_30d_Tar, a:d.Inv_30d_Ach}, {l:"60D", t:d.Inv_60d_Tar, a:d.Inv_60d_Ach}, {l:"90D+", t:d.Inv_90d_Tar, a:d.Inv_90d_Ach}, {l:"Markdown", t:d.Markdown_Tar, a:d.Markdown_Ach}]);
-                html += renderRow(`m-${id} row-parent`, "7. Space Management (NIP)", d.NIP_Value, d.NIP_Articles);
-                html += renderRow(`m-${id} row-parent`, "8. Own Brand Avail", d.OwnBrand_Avail_Tar, d.OwnBrand_Avail_Ach);
-                html += renderAccordion(`m-${id}`, id, "9. Promotions", "prom", [{l:"Articles", t:d.Promo_Articles, a:d.Promo_Articles}, {l:"Value", t:d.Promo_Value, a:d.Promo_Value}]);
-                html += renderRow(`m-${id} row-parent`, "10. Price Benchmark", d.PriceBench_Tar, d.PriceBench_Ach);
-                html += renderRow(`m-${id} row-parent`, "11. New Store Launch", d.NewStore_Sale_Tar, d.NewStore_Sale_Ach);
-            }
-            tbody.innerHTML = html;
-        } catch(e) { tbody.innerHTML = '<tr><td colspan="6">Error fetching data. Check script URL.</td></tr>'; }
-    }
+  let html='';
+  for(const id in m){
+    const d=m[id].d;
+    html+=`
+<tr class="row-merchant" onclick="toggleGroup('merchant-${id}',this)">
+<td colspan="6"><i class="toggle-icon">▶</i> ${m[id].name} (${id})</td>
+</tr>`;
 
-    function renderAccordion(masterCls, id, label, key, subs) {
-        let tT = 0, aA = 0, count = 0, childHtml = '';
-        subs.forEach(s => {
-            if (s.t || s.a) {
-                tT += parseFloat(s.t || 0); aA += parseFloat(s.a || 0); count++;
-                childHtml += renderRow(`sub-${id}-${key} ${masterCls} row-child`, s.l, s.t, s.a, true);
-            }
-        });
-        const avgT = count > 0 ? (tT/count) : 0, avgA = count > 0 ? (aA/count) : 0;
-        return `<tr class="row-parent ${masterCls}" style="display:none" onclick="toggleGroup('sub-${id}-${key}', this)"><td>&nbsp;&nbsp;&nbsp;<i class="toggle-icon">▶</i> [+] ${label}</td><td>${avgT.toFixed(1)}</td><td>${avgA.toFixed(1)}</td><td>${calculateAch(avgT, avgA)}%</td><td>-</td><td>-</td></tr>` + childHtml;
-    }
+    html+=renderRow(`merchant-${id} row-parent`,"1. Sales",d.Sales_Tar,d.Sales_Ach);
+    html+=renderAccordion(`merchant-${id}`,id,"2. Margin","m",
+      [{l:"GP1",t:d.GP1_Tar,a:d.GP1_Ach},{l:"GP2",t:d.GP2_Tar,a:d.GP2_Ach}]
+    );
+  }
+  tb.innerHTML=html;
+  updateKPIs();
+}
 
-    function renderRow(cls, label, t, a, indent=false) {
-        const perc = calculateAch(t, a); const grade = getGrade(perc);
-        return `<tr class="${cls}" style="display:none"><td class="${indent?'indent':''}">${indent?'':'&nbsp;&nbsp;&nbsp;'} ${label}</td><td>${t||'0'}</td><td>${a||'0'}</td><td>${perc}%</td><td>-</td><td><span class="badge ${getGradeCls(grade)}">${grade}</span></td></tr>`;
-    }
+function updateKPIs(){
+  const g=[...document.querySelectorAll('.badge')].map(b=>b.innerText);
+  kpiA.innerText=g.filter(x=>x==='A').length;
+  kpiB.innerText=g.filter(x=>x==='B').length;
+  kpiC.innerText=g.filter(x=>x==='C').length;
+  kpiT.innerText=g.length;
+}
 
-    function toggleGroup(cls, btn) {
-        const rows = document.querySelectorAll(`.${cls}`);
-        rows.forEach(r => { if(!r.classList.contains('row-child')) r.style.display = r.style.display === 'table-row' ? 'none' : 'table-row'; });
-        btn.classList.toggle('expanded');
-    }
+function expandAll(){
+  document.querySelectorAll('tr').forEach(r=>r.style.display='table-row');
+  document.querySelectorAll('.row-merchant,.row-parent').forEach(r=>r.classList.add('expanded'));
+}
+function collapseAll(){
+  document.querySelectorAll('.row-parent,.row-child').forEach(r=>r.style.display='none');
+  document.querySelectorAll('.expanded').forEach(r=>r.classList.remove('expanded'));
+}
 
-    function calculateAch(t, a) { return t > 0 ? ((a/t)*100).toFixed(1) : 0; }
-    function getGrade(p) { return p >= 95 ? "A" : p >= 80 ? "B" : "C"; }
-    function getGradeCls(g) { return g === 'A' ? 'grade-a' : g === 'B' ? 'grade-b' : 'grade-c'; }
+function exportHD(){
+  document.querySelectorAll('tr').forEach(r=>r.style.display='table-row');
+  html2canvas(document.getElementById('capture-area'),{scale:3})
+    .then(c=>{
+      const a=document.createElement('a');
+      a.download='dashboard.png';a.href=c.toDataURL();a.click();
+      loadDashboard();
+    });
+}
 
-    function exportHD() {
-        const area = document.getElementById('capture-area');
-        const rows = area.querySelectorAll('tr');
-        rows.forEach(r => r.style.display = 'table-row');
-        html2canvas(area, { scale: 3 }).then(canvas => {
-            const link = document.createElement('a'); link.download = `Performance_Report.png`; link.href = canvas.toDataURL(); link.click();
-            loadDashboard();
-        });
-    }
-
-    document.getElementById('merchantForm').onsubmit = e => {
-        e.preventDefault();
-        const btn = document.getElementById('submitBtn');
-        btn.innerText = "Submitting..."; btn.disabled = true;
-        fetch(scriptURL, { method: 'POST', body: new FormData(e.target) })
-            .then(() => { alert("Success!"); e.target.reset(); btn.innerText = "SUBMIT"; btn.disabled = false; })
-            .catch(() => { alert("Failed. Check connection."); btn.disabled = false; });
-    };
+loadDashboard();
 </script>
 </body>
 </html>
