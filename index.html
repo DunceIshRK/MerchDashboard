@@ -52,7 +52,7 @@ input,select{
 #submitBtn{
   width:100%; padding:18px; background:var(--brand);
   color:#fff; border:none; border-radius:12px;
-  font-weight:bold; font-size:1.1rem; cursor:pointer
+  font-weight:bold; font-size:1.1rem; cursor:pointer; margin-top:10px;
 }
 .export-btn{
   width:100%; padding:15px; background:var(--whatsapp);
@@ -95,7 +95,6 @@ td{padding:10px;border-bottom:1px solid #f1f5f9}
   <button class="tab-btn" onclick="showTab('dash',this)">DASHBOARD</button>
 </div>
 
-<!-- ================= FORM ================= -->
 <div id="form" class="tab-content active">
 <form id="merchantForm">
 
@@ -110,50 +109,39 @@ td{padding:10px;border-bottom:1px solid #f1f5f9}
 </div>
 
 <div class="grid">
-<div><label>Emp Name</label><input name="empName" required></div>
-<div><label>Emp ID</label><input name="empId" required></div>
+<div><label>Emp Name</label><input name="empName" required placeholder="Full Name"></div>
+<div><label>Emp ID</label><input name="empId" required placeholder="8-Digit ID"></div>
 </div>
 </div>
 
-<div class="section-card"><h3>1. Sales</h3><div class="grid"><input name="salesTar"><input name="salesAch"></div></div>
-<div class="section-card"><h3>2. RGM</h3><div class="grid"><input name="rgmTar"><input name="rgmAch"></div></div>
-<div class="section-card"><h3>3. Margin</h3><div class="grid"><input name="gp1Tar"><input name="gp1Ach"><input name="gp2Tar"><input name="gp2Ach"></div></div>
-<div class="section-card"><h3>4. Other Income</h3><div class="grid"><input name="otherIncTar"><input name="otherIncAch"></div></div>
-<div class="section-card"><h3>5. Availability</h3><div class="grid"><input name="availATar"><input name="availAAch"><input name="availBTar"><input name="availBAch"><input name="availCTar"><input name="availCAch"></div></div>
-<div class="section-card"><h3>6. Inventory</h3><div class="grid"><input name="inv30Tar"><input name="inv30Ach"><input name="inv60Tar"><input name="inv60Ach"><input name="inv90Tar"><input name="inv90Ach"><input name="markTar"><input name="markAch"></div></div>
-<div class="section-card"><h3>7. Space Management</h3><div class="grid"><input name="nipArticles"><input name="nipValue"></div></div>
-<div class="section-card"><h3>8. Own Brand</h3><div class="grid"><input name="ownAvailTar"><input name="ownAvailAch"></div></div>
-<div class="section-card"><h3>9. Promotions</h3><select name="promoType"><option>Promo A</option></select><div class="grid"><input name="promoArticles"><input name="promoValue"></div></div>
-<div class="section-card"><h3>10. Price Benchmark</h3><div class="grid"><input name="priceBenchTar"><input name="priceBenchAch"></div></div>
-<div class="section-card"><h3>11. New Store</h3><div class="grid"><input name="newStoreQtyTar"><input name="newStoreQtyAch"><input name="newStoreSaleTar"><input name="newStoreSaleAch"></div></div>
+<div class="section-card"><h3>1. Sales Performance</h3><div class="grid"><input name="salesTar" placeholder="Target %"><input name="salesAch" placeholder="Achieved %"></div></div>
+<div class="section-card"><h3>2. RGM Performance</h3><div class="grid"><input name="rgmTar" placeholder="Target Value"><input name="rgmAch" placeholder="Achieved Value"></div></div>
+<div class="section-card"><h3>3. Margin Management</h3><label>GP1</label><div class="grid"><input name="gp1Tar" placeholder="Tar %"><input name="gp1Ach" placeholder="Ach %"></div><label>GP2</label><div class="grid"><input name="gp2Tar" placeholder="Tar %"><input name="gp2Ach" placeholder="Ach %"></div></div>
+<div class="section-card"><h3>4. Other Income</h3><div class="grid"><input name="otherIncTar" placeholder="Target Val"><input name="otherIncAch" placeholder="Achieved Val"></div></div>
+<div class="section-card"><h3>5. Availability</h3><label>Cat A</label><div class="grid"><input name="availATar" placeholder="Tar %"><input name="availAAch" placeholder="Ach %"></div><label>Cat B</label><div class="grid"><input name="availBTar" placeholder="Tar %"><input name="availBAch" placeholder="Ach %"></div><label>Cat C</label><div class="grid"><input name="availCTar" placeholder="Tar %"><input name="availCAch" placeholder="Ach %"></div></div>
+<div class="section-card"><h3>6. Inventory Management</h3><label>30D / 60D / 90D Values</label><div class="grid"><input name="inv30Tar" placeholder="30D Tar"><input name="inv30Ach" placeholder="30D Ach"></div><div class="grid"><input name="inv60Tar" placeholder="60D Tar"><input name="inv60Ach" placeholder="60D Ach"></div><div class="grid"><input name="inv90Tar" placeholder="90D Tar"><input name="inv90Ach" placeholder="90D Ach"></div><label>Markdown %</label><div class="grid"><input name="markTar" placeholder="Mark Tar %"><input name="markAch" placeholder="Mark Ach %"></div></div>
+<div class="section-card"><h3>7. Space Management (NIP)</h3><div class="grid"><input name="nipArticles" placeholder="Articles"><input name="nipValue" placeholder="Total Value"></div></div>
+<div class="section-card"><h3>8. Own Brand Availability</h3><div class="grid"><input name="ownAvailTar" placeholder="Target %"><input name="ownAvailAch" placeholder="Achieved %"></div></div>
+<div class="section-card"><h3>9. Promotions</h3><select name="promoType"><option value="">-- Select Promo --</option><option>Promo A</option><option>Promo B</option></select><div class="grid"><input name="promoArticles" placeholder="Promo Articles"><input name="promoValue" placeholder="Promo Value"></div></div>
+<div class="section-card"><h3>10. Price Benchmark</h3><div class="grid"><input name="priceBenchTar" placeholder="Target %"><input name="priceBenchAch" placeholder="Achieved %"></div></div>
+<div class="section-card"><h3>11. New Store Launch</h3><label>Quantity / Sale Value</label><div class="grid"><input name="newStoreQtyTar" placeholder="Qty Tar"><input name="newStoreQtyAch" placeholder="Qty Ach"></div><div class="grid"><input name="newStoreSaleTar" placeholder="Sale Tar"><input name="newStoreSaleAch" placeholder="Sale Ach"></div></div>
 
-<button id="submitBtn">SUBMIT REPORT</button>
+<button type="submit" id="submitBtn">SUBMIT PERFORMANCE REPORT</button>
 </form>
 </div>
 
-<!-- ================= DASHBOARD ================= -->
 <div id="dash" class="tab-content">
-
-<button class="export-btn">📸 EXPORT DASHBOARD</button>
-
+<button class="export-btn">📸 EXPORT ULTRA-HD DASHBOARD (PNG)</button>
 <div class="filters">
 <select id="fState"></select>
 <select id="fCat"></select>
-<input id="fMerchant" placeholder="Search Merchant / ID">
+<input id="fMerchant" placeholder="Search Merchant Name or ID">
 </div>
-
 <div class="table-wrap">
 <table>
 <thead>
 <tr>
-<th>Category</th>
-<th>Merchant</th>
-<th>Metric</th>
-<th>Target</th>
-<th>Achieved</th>
-<th>Difference</th>
-<th>Growth %</th>
-<th>Grade</th>
+<th>Category</th><th>Merchant</th><th>Metric</th><th>Target</th><th>Achieved</th><th>Diff</th><th>Growth %</th><th>Grade</th>
 </tr>
 </thead>
 <tbody id="tbody"></tbody>
@@ -164,7 +152,6 @@ td{padding:10px;border-bottom:1px solid #f1f5f9}
 <script>
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwZZ7P9vUGdysmuVDjqM-eHIGbNfEB1AgAqUSkdBa9nf2VyMDiwhezrO-NmHyyIiFVK/exec";
 
-/* ---------------- TABS ---------------- */
 function showTab(id,btn){
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -173,27 +160,26 @@ function showTab(id,btn){
   if(id==='dash') loadDashboard();
 }
 
-/* ---------------- FORM SUBMIT ---------------- */
 document.getElementById('merchantForm').onsubmit=e=>{
   e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.innerText = "Submitting..."; btn.disabled = true;
   fetch(SCRIPT_URL,{method:'POST',body:new FormData(e.target)})
-    .then(()=>{alert('Submitted');e.target.reset()})
+    .then(()=>{alert('Success: Report Logged');e.target.reset(); btn.innerText="SUBMIT PERFORMANCE REPORT"; btn.disabled=false;});
 };
 
-/* ---------------- DASHBOARD ---------------- */
 const GROUPS=[
- {t:"Sales",f:[["Sales_Tar","Sales_Ach"]]},
- {t:"RGM",f:[["RGM_Tar","RGM_Ach"]]},
- {t:"Margin",k:"m",f:[["GP1_Tar","GP1_Ach"],["GP2_Tar","GP2_Ach"]]},
- {t:"Other Income",f:[["OtherInc_Tar","OtherInc_Ach"]]},
- {t:"Availability",k:"a",f:[["Avail_A_Tar","Avail_A_Ach"],["Avail_B_Tar","Avail_B_Ach"],["Avail_C_Tar","Avail_C_Ach"]]},
- {t:"Inventory",k:"i",f:[["Inv_30d_Tar","Inv_30d_Ach"],["Inv_60d_Tar","Inv_60d_Ach"],["Inv_90d_Tar","Inv_90d_Ach"],["Markdown_Tar","Markdown_Ach"]]},
- {t:"Space Mgmt",f:[["NIP_Articles","NIP_Value"]]},
- {t:"Own Brand",f:[["OwnBrand_Avail_Tar","OwnBrand_Avail_Ach"]]},
- {t:"Promotions",k:"p",f:[["Promo_Articles","Promo_Articles"],["Promo_Value","Promo_Value"]]},
- {t:"Price Benchmark",f:[["PriceBench_Tar","PriceBench_Ach"]]},
- {t:"New Store Qty",f:[["NewStore_Qty_Tar","NewStore_Qty_Ach"]]},
- {t:"New Store Sales",f:[["NewStore_Sale_Tar","NewStore_Sale_Ach"]]}
+ {t:"1. Sales Performance",f:[["Sales_Tar","Sales_Ach"]]},
+ {t:"2. RGM Performance",f:[["RGM_Tar","RGM_Ach"]]},
+ {t:"3. Margin Management",k:"m",f:[["GP1_Tar","GP1_Ach"],["GP2_Tar","GP2_Ach"]]},
+ {t:"4. Other Income",f:[["OtherInc_Tar","OtherInc_Ach"]]},
+ {t:"5. Availability",k:"a",f:[["Avail_A_Tar","Avail_A_Ach"],["Avail_B_Tar","Avail_B_Ach"],["Avail_C_Tar","Avail_C_Ach"]]},
+ {t:"6. Inventory Management",k:"i",f:[["Inv_30d_Tar","Inv_30d_Ach"],["Inv_60d_Tar","Inv_60d_Ach"],["Inv_90d_Tar","Inv_90d_Ach"],["Markdown_Tar","Markdown_Ach"]]},
+ {t:"7. Space Mgmt (NIP)",f:[["NIP_Articles","NIP_Value"]]},
+ {t:"8. Own Brand Avail",f:[["OwnBrand_Avail_Tar","OwnBrand_Avail_Ach"]]},
+ {t:"9. Promotions",k:"p",f:[["Promo_Articles","Promo_Value"]]},
+ {t:"10. Price Benchmark",f:[["PriceBench_Tar","PriceBench_Ach"]]},
+ {t:"11. New Store Launch",k:"ns",f:[["NewStore_Qty_Tar","NewStore_Qty_Ach"],["NewStore_Sale_Tar","NewStore_Sale_Ach"]]}
 ];
 
 function grade(p){return p>=95?'A':p>=80?'B':'C'}
@@ -202,64 +188,47 @@ function badge(g){return `<span class="badge ${g.toLowerCase()}">${g}</span>`}
 let DATA=[];
 
 async function loadDashboard(){
-  const raw=await fetch(SCRIPT_URL).then(r=>r.json());
-  const h=raw[0];
-  DATA=raw.slice(1).map(r=>{
-    const o={};h.forEach((x,i)=>o[x]=r[i]);return o;
-  });
-  initFilters(); render();
+  const targetTbody = document.getElementById('tbody');
+  targetTbody.innerHTML = '<tr><td colspan="8">Stitching performance data...</td></tr>';
+  try {
+    const raw = await fetch(SCRIPT_URL).then(r=>r.json());
+    const h = raw[0];
+    DATA = raw.slice(1).map(r=>{ const o={}; h.forEach((x,i)=>o[x]=r[i]); return o; });
+    initFilters(); render();
+  } catch(e) { targetTbody.innerHTML = '<tr><td colspan="8">Error fetching data. Check script URL.</td></tr>'; }
 }
 
 function initFilters(){
-  fState.innerHTML='<option value="">All States</option>'+[...new Set(DATA.map(d=>d.State))].map(x=>`<option>${x}</option>`).join('');
-  fCat.innerHTML='<option value="">All Categories</option>'+[...new Set(DATA.map(d=>d.Category))].map(x=>`<option>${x}</option>`).join('');
-  fState.onchange=fCat.onchange=fMerchant.oninput=render;
+  const sFilter = document.getElementById('fState'), cFilter = document.getElementById('fCat'), mFilter = document.getElementById('fMerchant');
+  sFilter.innerHTML='<option value="">All States</option>'+[...new Set(DATA.map(d=>d.State))].map(x=>`<option>${x}</option>`).join('');
+  cFilter.innerHTML='<option value="">All Categories</option>'+[...new Set(DATA.map(d=>d.Category))].map(x=>`<option>${x}</option>`).join('');
+  sFilter.onchange = cFilter.onchange = mFilter.oninput = render;
 }
 
 function render(){
-  tbody.innerHTML='';
-  const F=DATA.filter(d=>
-    (!fState.value||d.State===fState.value)&&
-    (!fCat.value||d.Category===fCat.value)&&
-    (!fMerchant.value||(`${d.Emp_Name} ${d.Emp_ID}`).toLowerCase().includes(fMerchant.value.toLowerCase()))
-  );
-  const byEmp={};
-  F.forEach(r=>(byEmp[r.Emp_ID]??=[]).push(r));
+  const targetTbody = document.getElementById('tbody'), fs = document.getElementById('fState').value, fc = document.getElementById('fCat').value, fm = document.getElementById('fMerchant').value.toLowerCase();
+  targetTbody.innerHTML='';
+  const F = DATA.filter(d=> (!fs||d.State===fs) && (!fc||d.Category===fc) && (!fm||(`${d.Emp_Name} ${d.Emp_ID}`).toLowerCase().includes(fm)) );
+  const merchants={};
+  F.forEach(row=>{
+    const id=row.Emp_ID; if(!merchants[id]) merchants[id]={name:row.Emp_Name, cat:row.Category, logs:[], stitched:{}};
+    merchants[id].logs.push(row);
+    Object.keys(row).forEach(k=>{ if(row[k]!=="" && row[k]!==null) merchants[id].stitched[k]=row[k]; });
+  });
 
-  for(const id in byEmp){
-    const rows=byEmp[id].sort((a,b)=>a.Month_Year>b.Month_Year?1:-1);
-    const c=rows.at(-1), p=rows.at(-2)||{};
-    tbody.innerHTML+=`
-<tr class="row-merchant" onclick="toggle('m${id}',this)">
-<td>${c.Category}</td>
-<td colspan="7"><span class="toggle">▶</span> ${c.Emp_Name} (${id})</td>
-</tr>`;
+  for(const id in merchants){
+    const m = merchants[id], c = m.stitched, rows = m.logs.sort((a,b)=>new Date(a.Timestamp)-new Date(b.Timestamp));
+    const p = rows[rows.length-2]||{};
+    targetTbody.innerHTML+=`<tr class="row-merchant" onclick="toggle('m${id}',this)"><td>${m.cat}</td><td colspan="7"><span class="toggle">▶</span> ${m.name} (${id})</td></tr>`;
     GROUPS.forEach((g,gi)=>{
-      let T=0,A=0,n=0;
-      g.f.forEach(([t,a])=>{T+=+c[t]||0;A+=+c[a]||0;n++});
-      const tA=T/n||0,aA=A/n||0,pct=tA?(aA/tA)*100:0;
-      tbody.innerHTML+=`
-<tr class="row-metric m${id}" style="display:none" onclick="${g.k?`toggle('s${id}${gi}',this)`:''}">
-<td></td><td></td>
-<td>${g.k?'<span class="toggle">▶</span> ':''}${g.t}</td>
-<td>${tA.toFixed(1)}</td>
-<td>${aA.toFixed(1)}</td>
-<td>${(aA-tA).toFixed(1)}</td>
-<td>${p[g.f[0][1]]?(((aA-(+p[g.f[0][1]]||0))/(+p[g.f[0][1]]||1))*100).toFixed(1):'-'}</td>
-<td>${badge(grade(pct))}</td>
-</tr>`;
+      let T=0,A=0,count=0;
+      g.f.forEach(([t,a])=>{ if(c[t]!==undefined && c[a]!==undefined){ T+=+c[t]||0; A+=+c[a]||0; count++; } });
+      const avgT=T/count||0, avgA=A/count||0, pct=avgT?(avgA/avgT)*100:0;
+      targetTbody.innerHTML+=`<tr class="row-metric m${id}" style="display:none" onclick="${g.k?`toggle('s${id}${gi}',this)`:''}"><td></td><td></td><td>${g.k?'<span class="toggle">▶</span> ':''}${g.t}</td><td>${avgT.toFixed(1)}</td><td>${avgA.toFixed(1)}</td><td>${(avgA-avgT).toFixed(1)}</td><td>-</td><td>${badge(grade(pct))}</td></tr>`;
       if(g.k){
         g.f.forEach(([t,a])=>{
-          const tv=+c[t]||0,av=+c[a]||0;
-          tbody.innerHTML+=`
-<tr class="row-sub s${id}${gi}" style="display:none">
-<td></td><td></td>
-<td class="indent">${t.replace('_Tar','')}</td>
-<td>${tv}</td><td>${av}</td>
-<td>${av-tv}</td>
-<td>${p[a]?(((av-(+p[a]||0))/(+p[a]||1))*100).toFixed(1):'-'}</td>
-<td>${badge(grade(tv?(av/tv)*100:0))}</td>
-</tr>`;
+          const tv=+c[t]||0, av=+c[a]||0, pAch=+p[a]||0;
+          targetTbody.innerHTML+=`<tr class="row-sub s${id}${gi}" style="display:none"><td></td><td></td><td class="indent">${t.replace('_Tar','')}</td><td>${tv}</td><td>${av}</td><td>${av-tv}</td><td>${pAch?(((av-pAch)/pAch)*100).toFixed(1):'-'}</td><td>${badge(grade(tv?(av/tv)*100:0))}</td></tr>`;
         });
       }
     });
@@ -267,12 +236,9 @@ function render(){
 }
 
 function toggle(cls,row){
-  document.querySelectorAll('.'+cls).forEach(r=>{
-    r.style.display=r.style.display==='none'?'table-row':'none';
-  });
+  document.querySelectorAll('.'+cls).forEach(r=>{ r.style.display=r.style.display==='none'?'table-row':'none'; });
   row.classList.toggle('expanded');
 }
 </script>
-
 </body>
 </html>
