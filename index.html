@@ -104,8 +104,8 @@ td{padding:10px;border-bottom:1px solid #f1f5f9}
 <input type="month" name="monthYear" required>
 
 <div class="grid">
-<div><label>State</label><select name="state"><option>West Bengal</option><option>Odisha</option></select></div>
-<div><label>Category</label><select name="category"><option>Staples</option><option>HPC</option></select></div>
+<div><label>State</label><select name="state"><option>West Bengal</option><option>Odisha</option><option>North East</option></select></div>
+<div><label>Category</label><select name="category"><option>Staples</option><option>HPC</option><option>F&V</option><option>Apparel</option><option>CDIT</option></select></div>
 </div>
 
 <div class="grid">
@@ -131,7 +131,7 @@ td{padding:10px;border-bottom:1px solid #f1f5f9}
 </div>
 
 <div id="dash" class="tab-content">
-<button class="export-btn">📸 EXPORT ULTRA-HD DASHBOARD (PNG)</button>
+<button class="export-btn" onclick="exportHD()">📸 EXPORT ULTRA-HD DASHBOARD (PNG)</button>
 <div class="filters">
 <select id="fState"></select>
 <select id="fCat"></select>
@@ -206,29 +206,43 @@ function initFilters(){
 }
 
 function render(){
-  const targetTbody = document.getElementById('tbody'), fs = document.getElementById('fState').value, fc = document.getElementById('fCat').value, fm = document.getElementById('fMerchant').value.toLowerCase();
+  const targetTbody = document.getElementById('tbody'), 
+        fs = document.getElementById('fState').value, 
+        fc = document.getElementById('fCat').value, 
+        fm = document.getElementById('fMerchant').value.toLowerCase();
+  
   targetTbody.innerHTML='';
+  
   const F = DATA.filter(d=> (!fs||d.State===fs) && (!fc||d.Category===fc) && (!fm||(`${d.Emp_Name} ${d.Emp_ID}`).toLowerCase().includes(fm)) );
-  const merchants={};
+  
+  const merchantGroups={};
   F.forEach(row=>{
-    const id=row.Emp_ID; if(!merchants[id]) merchants[id]={name:row.Emp_Name, cat:row.Category, logs:[], stitched:{}};
-    merchants[id].logs.push(row);
-    Object.keys(row).forEach(k=>{ if(row[k]!=="" && row[k]!==null) merchants[id].stitched[k]=row[k]; });
+    const groupKey = row.Category + "_" + row.Emp_ID; 
+    if(!merchantGroups[groupKey]) {
+        merchantGroups[groupKey] = {name: row.Emp_Name, id: row.Emp_ID, cat: row.Category, logs: [], stitched: {}};
+    }
+    merchantGroups[groupKey].logs.push(row);
+    Object.keys(row).forEach(k=>{ if(row[k]!=="" && row[k]!==null) merchantGroups[groupKey].stitched[k]=row[k]; });
   });
 
-  for(const id in merchants){
-    const m = merchants[id], c = m.stitched, rows = m.logs.sort((a,b)=>new Date(a.Timestamp)-new Date(b.Timestamp));
+  for(const key in merchantGroups){
+    const m = merchantGroups[key], c = m.stitched, rows = m.logs.sort((a,b)=>new Date(a.Timestamp)-new Date(b.Timestamp));
     const p = rows[rows.length-2]||{};
-    targetTbody.innerHTML+=`<tr class="row-merchant" onclick="toggle('m${id}',this)"><td>${m.cat}</td><td colspan="7"><span class="toggle">▶</span> ${m.name} (${id})</td></tr>`;
+    const cleanId = key.replace(/[^a-zA-Z0-9]/g, "");
+    
+    targetTbody.innerHTML+=`<tr class="row-merchant" onclick="toggle('m${cleanId}',this)"><td>${m.cat}</td><td colspan="7"><span class="toggle">▶</span> ${m.name} (${m.id})</td></tr>`;
+    
     GROUPS.forEach((g,gi)=>{
       let T=0,A=0,count=0;
       g.f.forEach(([t,a])=>{ if(c[t]!==undefined && c[a]!==undefined){ T+=+c[t]||0; A+=+c[a]||0; count++; } });
       const avgT=T/count||0, avgA=A/count||0, pct=avgT?(avgA/avgT)*100:0;
-      targetTbody.innerHTML+=`<tr class="row-metric m${id}" style="display:none" onclick="${g.k?`toggle('s${id}${gi}',this)`:''}"><td></td><td></td><td>${g.k?'<span class="toggle">▶</span> ':''}${g.t}</td><td>${avgT.toFixed(1)}</td><td>${avgA.toFixed(1)}</td><td>${(avgA-avgT).toFixed(1)}</td><td>-</td><td>${badge(grade(pct))}</td></tr>`;
+      
+      targetTbody.innerHTML+=`<tr class="row-metric m${cleanId}" style="display:none" onclick="${g.k?`toggle('s${cleanId}${gi}',this)`:''}"><td></td><td></td><td>${g.k?'<span class="toggle">▶</span> ':''}${g.t}</td><td>${avgT.toFixed(1)}</td><td>${avgA.toFixed(1)}</td><td>${(avgA-avgT).toFixed(1)}</td><td>-</td><td>${badge(grade(pct))}</td></tr>`;
+      
       if(g.k){
         g.f.forEach(([t,a])=>{
           const tv=+c[t]||0, av=+c[a]||0, pAch=+p[a]||0;
-          targetTbody.innerHTML+=`<tr class="row-sub s${id}${gi}" style="display:none"><td></td><td></td><td class="indent">${t.replace('_Tar','')}</td><td>${tv}</td><td>${av}</td><td>${av-tv}</td><td>${pAch?(((av-pAch)/pAch)*100).toFixed(1):'-'}</td><td>${badge(grade(tv?(av/tv)*100:0))}</td></tr>`;
+          targetTbody.innerHTML+=`<tr class="row-sub s${cleanId}${gi}" style="display:none"><td></td><td></td><td class="indent">${t.replace('_Tar','')}</td><td>${tv}</td><td>${av}</td><td>${av-tv}</td><td>${pAch?(((av-pAch)/pAch)*100).toFixed(1):'-'}</td><td>${badge(grade(tv?(av/tv)*100:0))}</td></tr>`;
         });
       }
     });
@@ -238,6 +252,13 @@ function render(){
 function toggle(cls,row){
   document.querySelectorAll('.'+cls).forEach(r=>{ r.style.display=r.style.display==='none'?'table-row':'none'; });
   row.classList.toggle('expanded');
+}
+
+function exportHD() {
+  const area = document.getElementById('dash');
+  const rows = area.querySelectorAll('tr');
+  rows.forEach(r => r.style.display = 'table-row');
+  // Note: html2canvas required for this function
 }
 </script>
 </body>
