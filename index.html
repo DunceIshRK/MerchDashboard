@@ -47,20 +47,19 @@ h3{ margin:0 0 12px; color:var(--brand); font-size:0.95rem; border-bottom:1px so
 label{font-size:.75rem;font-weight:600;color:#64748b}
 input,select{ width:100%; padding:12px; margin-top:5px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:14px; background: #fff; }
 
-/* FIX: Submit Button Style */
+/* UPDATED: Centered 50% Submit Button */
 #submitBtn {
-  width:50%; 
-  padding:18px; 
-  background:var(--brand); 
-  color:#fff; 
-  border:none; 
-  border-radius:12px;
-  font-weight:bold; 
-  font-size:1.1rem; 
-  cursor:pointer; 
-  margin-top:10px;
-  display: block;
-  margin: 0 auto;
+  width: 50%; 
+  padding: 18px; 
+  background: var(--brand); 
+  color: #fff; 
+  border: none; 
+  border-radius: 12px;
+  font-weight: bold; 
+  font-size: 1rem; 
+  cursor: pointer; 
+  margin: 20px auto; /* auto centers the block element */
+  display: block;   /* essential for centering with auto margin */
 }
 
 /* Dashboard Export Buttons */
@@ -133,7 +132,7 @@ td{padding:10px; border-bottom:1px solid #f1f5f9}
 <div class="section-card"><h3>10. Price Benchmark</h3><div class="grid"><input name="priceBenchTar" placeholder="Target %"><input name="priceBenchAch" placeholder="Achieved %"></div></div>
 <div class="section-card"><h3>11. New Store Launch</h3><div class="grid"><input name="newStoreQtyTar" placeholder="Qty Tar"><input name="newStoreQtyAch" placeholder="Qty Ach"></div><div class="grid"><input name="newStoreSaleTar" placeholder="Sale Tar"><input name="newStoreSaleAch" placeholder="Sale Ach"></div></div>
 
-<button type="submit" id="submitBtn">SUBMIT PERFORMANCE REPORT</button>
+<button type="submit" id="submitBtn">SUBMIT REPORT</button>
 </form>
 </div>
 
@@ -177,7 +176,7 @@ document.getElementById('merchantForm').onsubmit=e=>{
   const btn = document.getElementById('submitBtn');
   btn.innerText = "Submitting..."; btn.disabled = true;
   fetch(SCRIPT_URL,{method:'POST',body:new FormData(e.target)})
-    .then(()=>{alert('Success: Report Logged');e.target.reset(); btn.innerText="SUBMIT PERFORMANCE REPORT"; btn.disabled=false;});
+    .then(()=>{alert('Success: Report Logged');e.target.reset(); btn.innerText="SUBMIT REPORT"; btn.disabled=false;});
 };
 
 const GROUPS=[
@@ -223,7 +222,7 @@ async function loadDashboard(){
     for(const key in mGroups){
       const m = mGroups[key], c = m.stitched, rows = m.logs.sort((a,b)=>new Date(a.Timestamp)-new Date(b.Timestamp));
       const p = rows[rows.length-2]||{}, cleanId = key.replace(/[^a-zA-Z0-9]/g, "");
-      targetTbody.innerHTML+=`<tr class="row-merchant" onclick="toggle('m${cleanId}',this)"><td>${m.cat}</td><td colspan="7"><span class="toggle">▶</span> ${m.name} (${id})</td></tr>`;
+      targetTbody.innerHTML+=`<tr class="row-merchant" onclick="toggle('m${cleanId}',this)"><td>${m.cat}</td><td colspan="7"><span class="toggle">▶</span> ${m.name} (${m.id})</td></tr>`;
       GROUPS.forEach((g,gi)=>{
         let T=0,A=0,count=0;
         g.f.forEach(([t,a])=>{ if(c[t]!==undefined && c[a]!==undefined){ T+=+c[t]||0; A+=+c[a]||0; count++; } });
