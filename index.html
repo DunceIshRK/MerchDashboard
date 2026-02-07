@@ -47,6 +47,21 @@ h3{ margin:0 0 12px; color:var(--brand); font-size:0.95rem; border-bottom:1px so
 label{font-size:.75rem;font-weight:600;color:#64748b}
 input,select{ width:100%; padding:12px; margin-top:5px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:14px; background: #fff; }
 
+/* FIX: Submit Button Style */
+#submitBtn {
+  width:100%; 
+  padding:18px; 
+  background:var(--brand); 
+  color:#fff; 
+  border:none; 
+  border-radius:12px;
+  font-weight:bold; 
+  font-size:1.1rem; 
+  cursor:pointer; 
+  margin-top:10px;
+  display: block;
+}
+
 /* Dashboard Export Buttons */
 .export-container { display: flex; gap: 10px; margin-bottom: 12px; }
 .export-btn{
@@ -148,7 +163,6 @@ td{padding:10px; border-bottom:1px solid #f1f5f9}
 <script>
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwZZ7P9vUGdysmuVDjqM-eHIGbNfEB1AgAqUSkdBa9nf2VyMDiwhezrO-NmHyyIiFVK/exec";
 
-/* ---------------- TAB NAVIGATION ---------------- */
 function showTab(id,btn){
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -157,7 +171,6 @@ function showTab(id,btn){
   if(id==='dash') loadDashboard();
 }
 
-/* ---------------- FORM DATA SUBMISSION ---------------- */
 document.getElementById('merchantForm').onsubmit=e=>{
   e.preventDefault();
   const btn = document.getElementById('submitBtn');
@@ -166,7 +179,6 @@ document.getElementById('merchantForm').onsubmit=e=>{
     .then(()=>{alert('Success: Report Logged');e.target.reset(); btn.innerText="SUBMIT PERFORMANCE REPORT"; btn.disabled=false;});
 };
 
-/* ---------------- DASHBOARD LOGIC ---------------- */
 const GROUPS=[
  {t:"1. Sales Performance",f:[["Sales_Tar","Sales_Ach"]]},
  {t:"2. RGM Performance",f:[["RGM_Tar","RGM_Ach"]]},
@@ -186,7 +198,7 @@ function badge(g){return `<span class="badge ${g.toLowerCase()}">${g}</span>`}
 
 async function loadDashboard(){
   const targetTbody = document.getElementById('tbody');
-  targetTbody.innerHTML = '<tr><td colspan="8">Fetching stitched logs...</td></tr>';
+  targetTbody.innerHTML = '<tr><td colspan="8">Stitching performance data...</td></tr>';
   const raw = await fetch(SCRIPT_URL).then(r=>r.json());
   const h = raw[0], DATA = raw.slice(1).map(r=>{ const o={}; h.forEach((x,i)=>o[x]=r[i]); return o; });
 
@@ -199,7 +211,6 @@ async function loadDashboard(){
     const fs = sFilter.value, fc = cFilter.value, fm = mFilter.value.toLowerCase();
     const F = DATA.filter(d=> (!fs||d.State===fs) && (!fc||d.Category===fc) && (!fm||(`${d.Emp_Name} ${d.Emp_ID}`).toLowerCase().includes(fm)) );
     
-    // Grouping by Category + ID to show Kalyan Roy Staples and Kalyan Roy HPC separately
     const mGroups={};
     F.forEach(row=>{
       const key = row.Category + "_" + row.Emp_ID; 
@@ -211,7 +222,7 @@ async function loadDashboard(){
     for(const key in mGroups){
       const m = mGroups[key], c = m.stitched, rows = m.logs.sort((a,b)=>new Date(a.Timestamp)-new Date(b.Timestamp));
       const p = rows[rows.length-2]||{}, cleanId = key.replace(/[^a-zA-Z0-9]/g, "");
-      targetTbody.innerHTML+=`<tr class="row-merchant" onclick="toggle('m${cleanId}',this)"><td>${m.cat}</td><td colspan="7"><span class="toggle">▶</span> ${m.name} (${m.id})</td></tr>`;
+      targetTbody.innerHTML+=`<tr class="row-merchant" onclick="toggle('m${cleanId}',this)"><td>${m.cat}</td><td colspan="7"><span class="toggle">▶</span> ${m.name} (${id})</td></tr>`;
       GROUPS.forEach((g,gi)=>{
         let T=0,A=0,count=0;
         g.f.forEach(([t,a])=>{ if(c[t]!==undefined && c[a]!==undefined){ T+=+c[t]||0; A+=+c[a]||0; count++; } });
@@ -232,18 +243,17 @@ function toggle(cls,row){
   row.classList.toggle('expanded');
 }
 
-/* ---------------- MOBILE-OPTIMIZED EXPORT ---------------- */
+/* ---------------- EXPORT ---------------- */
 async function exportJPG() {
   const area = document.getElementById('capture-area');
   const btn = event.target; btn.innerText = "Optimizing for WhatsApp...";
   const allRows = area.querySelectorAll('tr');
   const originalDisplays = []; allRows.forEach(r => { originalDisplays.push(r.style.display); r.style.display = 'table-row'; });
 
-  // Scale 2 and windowWidth settings ensure no cut-off on mobile
   const canvas = await html2canvas(area, { scale: 2, useCORS: true, width: area.scrollWidth, windowWidth: area.scrollWidth });
   const link = document.createElement('a');
-  link.download = `Merchant_Performance_Report.jpg`;
-  link.href = canvas.toDataURL('image/jpeg', 0.8); // High quality JPG for sharing
+  link.download = `Performance_Report_${new Date().toLocaleDateString()}.jpg`;
+  link.href = canvas.toDataURL('image/jpeg', 0.8);
   link.click();
 
   allRows.forEach((r, i) => r.style.display = originalDisplays[i]);
@@ -253,22 +263,21 @@ async function exportJPG() {
 async function exportPDF() {
   const { jsPDF } = window.jspdf;
   const area = document.getElementById('capture-area');
-  const btn = event.target; btn.innerText = "Generating Small-Size PDF...";
+  const btn = event.target; btn.innerText = "Generating PDF...";
   document.getElementById('gen-date').innerText = new Date().toLocaleString();
   document.getElementById('pdf-header').style.display = 'block';
 
   const allRows = area.querySelectorAll('tr');
   const originalDisplays = []; allRows.forEach(r => { originalDisplays.push(r.style.display); r.style.display = 'table-row'; });
 
-  // Scale 1.5 and JPEG conversion significantly reduces 45MB file size
   const canvas = await html2canvas(area, { scale: 1.5, useCORS: true, width: area.scrollWidth, windowWidth: area.scrollWidth });
-  const imgData = canvas.toDataURL('image/jpeg', 0.7); // High compression JPEG
+  const imgData = canvas.toDataURL('image/jpeg', 0.7);
   const pdf = new jsPDF('p', 'mm', 'a4');
   const pdfWidth = pdf.internal.pageSize.getWidth();
   const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
   pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
-  pdf.save(`Performance_Report_${new Date().toLocaleDateString()}.pdf`);
+  pdf.save(`Merchant_Report_${new Date().toLocaleDateString()}.pdf`);
 
   allRows.forEach((r, i) => r.style.display = originalDisplays[i]);
   document.getElementById('pdf-header').style.display = 'none';
