@@ -1,90 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Merchant Performance Portal</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <style>
-        :root { --brand: #ff9900; --bg: #f8fafc; --text: #1e293b; --success: #166534; --danger: #991b1b; --whatsapp: #075e54; }
-        * { -webkit-font-smoothing: antialiased; box-sizing: border-box; }
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding: 15px; color: var(--text); }
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; position: sticky; top: 0; z-index: 100; background: var(--bg); padding-bottom: 10px; }
-        .tab-btn { flex: 1; padding: 12px; border: none; border-radius: 10px; background: #e2e8f0; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .tab-btn.active { background: var(--brand); color: white; box-shadow: 0 4px 12px rgba(255, 153, 0, 0.3); }
-        .tab-content { display: none; max-width: 100%; margin: auto; }
-        .tab-content.active { display: block; }
-        .section-card { background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-top: 4px solid var(--brand); }
-        h3 { margin: 0 0 15px 0; color: var(--brand); font-size: 1rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        label { display: block; margin-top: 10px; font-weight: 600; font-size: 0.8rem; color: #64748b; }
-        input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: #fff; }
-        button#submitBtn { width: 100%; padding: 18px; background: var(--brand); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 20px; }
-        .export-btn { width: 100%; padding: 15px; background: var(--whatsapp); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-bottom: 15px; }
-        .table-wrapper { overflow-x: auto; background: white; border-radius: 14px; border: 1px solid #e2e8f0; }
-        table { border-collapse: collapse; width: 100%; min-width: 1100px; font-size: 12px; }
-        th { background: #1e293b; color: white; padding: 12px; text-align: left; }
-        td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; }
-        .row-merchant { background: #fff7ed; cursor: pointer; font-weight: 800; color: #9a3412; border-left: 5px solid var(--brand); }
-        .row-parent { background: #ffffff; cursor: pointer; font-weight: 600; color: #334155; }
-        .row-child { display: none; background: #fafafa; color: #64748b; }
-        .indent { padding-left: 35px !important; }
-        .toggle-icon { display: inline-block; width: 18px; transition: 0.2s; font-style: normal; text-align: center; }
-        .expanded .toggle-icon { transform: rotate(90deg); }
-        .badge { padding: 4px 8px; border-radius: 6px; font-weight: bold; font-size: 10px; display: inline-block; }
-        .grade-a { background: #dcfce7; color: var(--success); }
-        .grade-b { background: #fef9c3; color: #854d0e; }
-        .grade-c { background: #fee2e2; color: var(--danger); }
-    </style>
-</head>
-<body>
-
-<div class="tabs">
-    <button class="tab-btn active" onclick="showTab('form')">ENTRY FORM</button>
-    <button class="tab-btn" onclick="showTab('db')">DASHBOARD</button>
-</div>
-
-<div id="form" class="tab-content active">
-    <form id="merchantForm">
-        <div class="section-card">
-            <h3>Merchant Information</h3>
-            <label>Month & Year</label><input type="month" name="monthYear" required>
-            <div class="grid">
-                <div><label>State</label><select name="state"><option>West Bengal</option><option>Odisha</option><option>North East</option></select></div>
-                <div><label>Category</label><select name="category"><option>Staples</option><option>HPC</option><option>F&V</option><option>Apparel</option><option>CDIT</option></select></div>
-            </div>
-            <div class="grid">
-                <div><label>Emp Name</label><input type="text" name="empName" placeholder="Full Name" required></div>
-                <div><label>Emp ID</label><input type="text" name="empId" placeholder="8-Digit ID" required></div>
-            </div>
-        </div>
-
-        <div class="section-card"><h3>1. Sales Performance</h3><div class="grid"><input type="number" step="0.01" name="salesTar" placeholder="Tar %"><input type="number" step="0.01" name="salesAch" placeholder="Ach %"></div></div>
-        <div class="section-card"><h3>2. RGM Performance</h3><div class="grid"><input type="number" step="0.01" name="rgmTar" placeholder="Tar Val"><input type="number" step="0.01" name="rgmAch" placeholder="Ach Val"></div></div>
-        <div class="section-card"><h3>3. Margin Management</h3><label>GP1</label><div class="grid"><input type="number" step="0.01" name="gp1Tar" placeholder="Tar %"><input type="number" step="0.01" name="gp1Ach" placeholder="Ach %"></div><label>GP2</label><div class="grid"><input type="number" step="0.01" name="gp2Tar" placeholder="Tar %"><input type="number" step="0.01" name="gp2Ach" placeholder="Ach %"></div></div>
-        <div class="section-card"><h3>4. Other Income</h3><div class="grid"><input type="number" name="otherIncTar" placeholder="Target"><input type="number" name="otherIncAch" placeholder="Achieved"></div></div>
-        <div class="section-card"><h3>5. Availability</h3><label>Cat A</label><div class="grid"><input type="number" name="availATar" placeholder="Tar %"><input type="number" name="availAAch" placeholder="Ach %"></div><label>Cat B</label><div class="grid"><input type="number" name="availBTar" placeholder="Tar %"><input type="number" name="availBAch" placeholder="Ach %"></div><label>Cat C</label><div class="grid"><input type="number" name="availCTar" placeholder="Tar %"><input type="number" name="availCAch" placeholder="Ach %"></div></div>
-        <div class="section-card"><h3>6. Inventory</h3><label>30D</label><div class="grid"><input type="number" name="inv30Tar" placeholder="Tar"><input type="number" name="inv30Ach" placeholder="Ach"></div><label>90D+</label><div class="grid"><input type="number" name="inv90Tar" placeholder="Tar"><input type="number" name="inv90Ach" placeholder="Ach"></div></div>
-        <div class="section-card"><h3>7. Space Management</h3><div class="grid"><input type="number" name="nipArticles" placeholder="Articles"><input type="number" name="nipValue" placeholder="Value"></div></div>
-        <div class="section-card"><h3>8. Own Brand</h3><label>Avail %</label><div class="grid"><input type="number" name="ownAvailTar" placeholder="Tar %"><input type="number" name="ownAvailAch" placeholder="Ach %"></div></div>
-        <div class="section-card"><h3>9. Promotions</h3><select name="promoType"><option value="">-- Select --</option><option>Promo A</option><option>Promo B</option></select><div class="grid"><input type="number" name="promoArticles" placeholder="Articles"><input type="number" name="promoValue" placeholder="Value"></div></div>
-        <div class="section-card"><h3>10. Price Benchmark</h3><div class="grid"><input type="number" name="priceBenchTar" placeholder="Tar %"><input type="number" name="priceBenchAch" placeholder="Ach %"></div></div>
-        <div class="section-card"><h3>11. New Store Launch</h3><div class="grid"><input type="number" name="newStoreSaleTar" placeholder="Sale Tar"><input type="number" name="newStoreSaleAch" placeholder="Sale Ach"></div></div>
-
-        <button type="submit" id="submitBtn">SUBMIT REPORT</button>
-    </form>
-</div>
-
-<div id="db" class="tab-content">
-    <button class="export-btn" onclick="exportHD()">📸 EXPORT PNG</button>
-    <div class="table-wrapper" id="capture-area">
-        <h2 style="padding:15px; margin:0;">Merchant Performance - 11 Section View</h2>
-        <table>
-            <thead><tr><th>Metric Name</th><th>Target</th><th>Achieved</th><th>% Age</th><th>Growth</th><th>Grade</th></tr></thead>
-            <tbody id="dashBody"></tbody>
-        </table>
-    </div>
-</div>
-
 <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwZZ7P9vUGdysmuVDjqM-eHIGbNfEB1AgAqUSkdBa9nf2VyMDiwhezrO-NmHyyIiFVK/exec';
 
@@ -107,7 +20,9 @@
         dataRows.forEach(row => {
             const id = row[5];
             if(!merchants[id]) merchants[id] = { name: row[4], cat: row[3], d: {} };
-            headers.forEach((h, i) => { if(row[i] !== "" && row[i] !== null) merchants[id].d[h] = row[i]; });
+            headers.forEach((h, i) => { 
+                if(row[i] !== "" && row[i] !== null) merchants[id].d[h] = row[i]; 
+            });
         });
 
         let html = '';
@@ -115,15 +30,45 @@
             const m = merchants[id]; const d = m.d;
             html += `<tr class="row-merchant" onclick="toggleGroup('m-${id}')"><td colspan="6"><i class="toggle-icon">▶</i> ${m.name} (${id})</td></tr>`;
             
+            // 1. Sales & 2. RGM (Direct Rows)
             html += renderRow(`m-${id} row-parent`, "1. Sales Performance", d.Sales_Tar, d.Sales_Ach);
             html += renderRow(`m-${id} row-parent`, "2. RGM Performance", d.RGM_Tar, d.RGM_Ach);
-            html += renderAccordion(`m-${id}`, id, "3. Margin", "marg", [{l:"GP1", t:d.GP1_Tar, a:d.GP1_Ach}, {l:"GP2", t:d.GP2_Tar, a:d.GP2_Ach}]);
+            
+            // 3. Margin (Expandable: GP1, GP2)
+            html += renderAccordion(`m-${id}`, id, "3. Margin Management", "marg", [
+                {l:"GP1", t:d.GP1_Tar, a:d.GP1_Ach}, 
+                {l:"GP2", t:d.GP2_Tar, a:d.GP2_Ach}
+            ]);
+            
+            // 4. Other Income
             html += renderRow(`m-${id} row-parent`, "4. Other Income", d.OtherInc_Tar, d.OtherInc_Ach);
-            html += renderAccordion(`m-${id}`, id, "5. Availability", "av", [{l:"Cat A", t:d.Avail_A_Tar, a:d.Avail_A_Ach}, {l:"Cat B", t:d.Avail_B_Tar, a:d.Avail_B_Ach}]);
-            html += renderAccordion(`m-${id}`, id, "6. Inventory", "inv", [{l:"30D", t:d.Inv_30d_Tar, a:d.Inv_30d_Ach}, {l:"90D+", t:d.Inv_90d_Tar, a:d.Inv_90d_Ach}]);
-            html += renderRow(`m-${id} row-parent`, "7. Space (NIP)", d.NIP_Value, d.NIP_Articles);
+            
+            // 5. Availability (Expandable: Cat A, B, C)
+            html += renderAccordion(`m-${id}`, id, "5. Availability", "av", [
+                {l:"Category A", t:d.Avail_A_Tar, a:d.Avail_A_Ach}, 
+                {l:"Category B", t:d.Avail_B_Tar, a:d.Avail_B_Ach},
+                {l:"Category C", t:d.Avail_C_Tar, a:d.Avail_C_Ach}
+            ]);
+            
+            // 6. Inventory (Expandable: 30D, 60D, 90D, Markdown)
+            html += renderAccordion(`m-${id}`, id, "6. Inventory Management", "inv", [
+                {l:"30 Days", t:d.Inv_30d_Tar, a:d.Inv_30d_Ach}, 
+                {l:"60 Days", t:d.Inv_60d_Tar, a:d.Inv_60d_Ach},
+                {l:"90 Days+", t:d.Inv_90d_Tar, a:d.Inv_90d_Ach},
+                {l:"Markdown", t:d.Markdown_Tar, a:d.Markdown_Ach}
+            ]);
+            
+            // 7. Space & 8. Own Brand
+            html += renderRow(`m-${id} row-parent`, "7. Space Management (NIP)", d.NIP_Value, d.NIP_Articles);
             html += renderRow(`m-${id} row-parent`, "8. Own Brand Avail", d.OwnBrand_Avail_Tar, d.OwnBrand_Avail_Ach);
-            html += renderRow(`m-${id} row-parent`, "9. Promotions", d.Promo_Articles, d.Promo_Value);
+            
+            // 9. Promotions (Expandable: Promo Metrics)
+            html += renderAccordion(`m-${id}`, id, "9. Promotions (" + (d.Promo_Type || "N/A") + ")", "prom", [
+                {l:"Promo Articles", t:d.Promo_Articles, a:d.Promo_Articles}, 
+                {l:"Promo Value", t:d.Promo_Value, a:d.Promo_Value}
+            ]);
+
+            // 10. Price Benchmark & 11. New Store
             html += renderRow(`m-${id} row-parent`, "10. Price Benchmark", d.PriceBench_Tar, d.PriceBench_Ach);
             html += renderRow(`m-${id} row-parent`, "11. New Store Launch", d.NewStore_Sale_Tar, d.NewStore_Sale_Ach);
         }
@@ -133,13 +78,16 @@
     function renderAccordion(masterCls, id, label, key, subs) {
         let tT = 0, aA = 0, count = 0, childHtml = '';
         subs.forEach(s => {
-            if (s.t || s.a) {
+            if (s.t !== undefined && s.a !== undefined) {
                 tT += parseFloat(s.t || 0); aA += parseFloat(s.a || 0); count++;
                 childHtml += renderRow(`sub-${id}-${key} ${masterCls} row-child`, s.l, s.t, s.a, true);
             }
         });
         const avgT = count > 0 ? (tT/count) : 0, avgA = count > 0 ? (aA/count) : 0;
-        return `<tr class="row-parent ${masterCls}" style="display:none" onclick="toggleGroup('sub-${id}-${key}')"><td>&nbsp;&nbsp;&nbsp;[+] ${label}</td><td>${avgT.toFixed(1)}</td><td>${avgA.toFixed(1)}</td><td>${calculateAch(avgT, avgA)}%</td><td>-</td><td>-</td></tr>` + childHtml;
+        const parent = `<tr class="row-parent ${masterCls}" style="display:none" onclick="toggleGroup('sub-${id}-${key}')">
+            <td>&nbsp;&nbsp;&nbsp;<i class="toggle-icon">▶</i> [+] ${label}</td>
+            <td>${avgT.toFixed(1)}</td><td>${avgA.toFixed(1)}</td><td>${calculateAch(avgT, avgA)}%</td><td>-</td><td>-</td></tr>`;
+        return parent + childHtml;
     }
 
     function renderRow(cls, label, t, a, indent=false) {
@@ -150,6 +98,7 @@
     function toggleGroup(cls) {
         const rows = document.querySelectorAll(`.${cls}`);
         rows.forEach(r => { if(!r.classList.contains('row-child')) r.style.display = r.style.display === 'table-row' ? 'none' : 'table-row'; });
+        event.currentTarget.classList.toggle('expanded');
     }
 
     function calculateAch(t, a) { return t > 0 ? ((a/t)*100).toFixed(1) : 0; }
@@ -173,5 +122,3 @@
             .then(() => { alert("Success!"); e.target.reset(); btn.innerText = "SUBMIT"; btn.disabled = false; });
     };
 </script>
-</body>
-</html>
