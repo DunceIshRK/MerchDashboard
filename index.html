@@ -1,36 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Merchant Performance Portal</title>
 
 <style>
-body{font-family:system-ui;background:#f8fafc;margin:0;padding:15px}
+:root{
+  --brand:#ff9900;--bg:#f8fafc;--text:#1e293b;
+  --a:#166534;--b:#854d0e;--c:#991b1b
+}
+*{box-sizing:border-box}
+body{margin:0;padding:15px;font-family:system-ui;background:var(--bg);color:var(--text)}
+
 .tabs{display:flex;gap:10px;margin-bottom:15px}
-.tab-btn{flex:1;padding:12px;border-radius:10px;border:0;font-weight:700;cursor:pointer;background:#e2e8f0}
-.tab-btn.active{background:#ff9900;color:#fff}
+.tab-btn{
+  flex:1;padding:12px;border-radius:10px;border:0;
+  font-weight:700;cursor:pointer;background:#e2e8f0
+}
+.tab-btn.active{background:var(--brand);color:#fff}
 .tab{display:none}
 .tab.active{display:block}
 
-.filters{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
-select,input{padding:8px;border-radius:6px;border:1px solid #cbd5e1}
+/* FORM */
+.section{background:#fff;padding:15px;border-radius:12px;margin-bottom:15px}
+.section h3{margin:0 0 10px;color:var(--brand)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input,select{width:100%;padding:10px;border-radius:8px;border:1px solid #cbd5e1}
 
-table{border-collapse:collapse;width:100%;min-width:1300px;background:#fff}
+/* FILTERS */
+.filters{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+
+/* TABLE */
+table{border-collapse:collapse;width:100%;min-width:1400px;background:#fff}
 th,td{padding:10px;border-bottom:1px solid #e5e7eb;font-size:12px}
 th{background:#1e293b;color:#fff;text-align:left}
-
 .row-merchant{background:#fff7ed;font-weight:800;cursor:pointer}
 .row-metric{background:#f1f5f9;font-weight:700;cursor:pointer}
 .row-sub{background:#fff;color:#64748b}
 .indent{padding-left:30px}
-
 .toggle{display:inline-block;width:18px;transition:.2s}
 .expanded .toggle{transform:rotate(90deg)}
 
 .badge{padding:4px 8px;border-radius:6px;font-size:10px;font-weight:800}
-.a{background:#dcfce7;color:#166534}
-.b{background:#fef9c3;color:#854d0e}
-.c{background:#fee2e2;color:#991b1b}
+.badge.a{background:#dcfce7;color:var(--a)}
+.badge.b{background:#fef9c3;color:var(--b)}
+.badge.c{background:#fee2e2;color:var(--c)}
 </style>
 </head>
 
@@ -42,38 +57,117 @@ th{background:#1e293b;color:#fff;text-align:left}
   <button class="tab-btn" onclick="showTab('dash',this)">DASHBOARD</button>
 </div>
 
-<!-- FORM (KEEP YOUR EXISTING FORM HERE AS-IS) -->
+<!-- FORM -->
 <div id="form" class="tab active">
-  <p><b>⚠️ Keep your existing form here exactly as it is.</b></p>
+<form id="merchantForm">
+
+<div class="section">
+<h3>Basic Info</h3>
+<input type="month" name="monthYear" required>
+<div class="grid">
+<select name="state"><option>West Bengal</option></select>
+<select name="category"><option>Staples</option><option>HPC</option></select>
+</div>
+<div class="grid">
+<input name="empName" placeholder="Emp Name" required>
+<input name="empId" placeholder="Emp ID" required>
+</div>
+</div>
+
+<div class="section"><h3>1. Sales</h3>
+<div class="grid">
+<input name="salesTar" placeholder="Target">
+<input name="salesAch" placeholder="Achieved">
+</div></div>
+
+<div class="section"><h3>2. RGM</h3>
+<div class="grid">
+<input name="rgmTar"><input name="rgmAch">
+</div></div>
+
+<div class="section"><h3>3. Margin</h3>
+<div class="grid">
+<input name="gp1Tar"><input name="gp1Ach">
+<input name="gp2Tar"><input name="gp2Ach">
+</div></div>
+
+<div class="section"><h3>4. Other Income</h3>
+<div class="grid">
+<input name="otherIncTar"><input name="otherIncAch">
+</div></div>
+
+<div class="section"><h3>5. Availability</h3>
+<div class="grid">
+<input name="availATar"><input name="availAAch">
+<input name="availBTar"><input name="availBAch">
+<input name="availCTar"><input name="availCAch">
+</div></div>
+
+<div class="section"><h3>6. Inventory</h3>
+<div class="grid">
+<input name="inv30Tar"><input name="inv30Ach">
+<input name="inv60Tar"><input name="inv60Ach">
+<input name="inv90Tar"><input name="inv90Ach">
+<input name="markTar"><input name="markAch">
+</div></div>
+
+<div class="section"><h3>7. Space (NIP)</h3>
+<div class="grid">
+<input name="nipArticles"><input name="nipValue">
+</div></div>
+
+<div class="section"><h3>8. Own Brand</h3>
+<div class="grid">
+<input name="ownAvailTar"><input name="ownAvailAch">
+</div></div>
+
+<div class="section"><h3>9. Promotions</h3>
+<select name="promoType"><option>Promo A</option></select>
+<div class="grid">
+<input name="promoArticles"><input name="promoValue">
+</div></div>
+
+<div class="section"><h3>10. Price Benchmark</h3>
+<div class="grid">
+<input name="priceBenchTar"><input name="priceBenchAch">
+</div></div>
+
+<div class="section"><h3>11. New Store</h3>
+<div class="grid">
+<input name="newStoreQtyTar"><input name="newStoreQtyAch">
+<input name="newStoreSaleTar"><input name="newStoreSaleAch">
+</div></div>
+
+<button type="submit">SUBMIT</button>
+</form>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dash" class="tab">
 
 <div class="filters">
-  <select id="fState"></select>
-  <select id="fCat"></select>
-  <input id="fMerchant" placeholder="Search Merchant / ID">
+<select id="fState"></select>
+<select id="fCat"></select>
+<input id="fMerchant" placeholder="Search Merchant / ID">
 </div>
 
 <div style="overflow-x:auto">
 <table>
 <thead>
 <tr>
-  <th>Category</th>
-  <th>Merchant</th>
-  <th>Metric</th>
-  <th>Target</th>
-  <th>Achieved</th>
-  <th>Difference</th>
-  <th>Growth %</th>
-  <th>Grade</th>
+<th>Category</th>
+<th>Merchant</th>
+<th>Metric</th>
+<th>Target</th>
+<th>Achieved</th>
+<th>Difference</th>
+<th>Growth %</th>
+<th>Grade</th>
 </tr>
 </thead>
-<tbody id="body"></tbody>
+<tbody id="tbody"></tbody>
 </table>
 </div>
-
 </div>
 
 <script>
@@ -84,33 +178,28 @@ function showTab(id,btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   btn.classList.add('active');
-  if(id==='dash') load();
+  if(id==='dash') loadDashboard();
 }
 
 const GROUPS=[
  {t:"Sales",f:[["Sales_Tar","Sales_Ach"]]},
  {t:"RGM",f:[["RGM_Tar","RGM_Ach"]]},
- {t:"Margin",k:"m",f:[
-   ["GP1_Tar","GP1_Ach"],["GP2_Tar","GP2_Ach"]
- ]},
+ {t:"Margin",k:"m",f:[["GP1_Tar","GP1_Ach"],["GP2_Tar","GP2_Ach"]]},
  {t:"Other Income",f:[["OtherInc_Tar","OtherInc_Ach"]]},
  {t:"Availability",k:"a",f:[
-   ["Avail_A_Tar","Avail_A_Ach"],
-   ["Avail_B_Tar","Avail_B_Ach"],
-   ["Avail_C_Tar","Avail_C_Ach"]
+  ["Avail_A_Tar","Avail_A_Ach"],
+  ["Avail_B_Tar","Avail_B_Ach"],
+  ["Avail_C_Tar","Avail_C_Ach"]
  ]},
  {t:"Inventory",k:"i",f:[
-   ["Inv_30d_Tar","Inv_30d_Ach"],
-   ["Inv_60d_Tar","Inv_60d_Ach"],
-   ["Inv_90d_Tar","Inv_90d_Ach"],
-   ["Markdown_Tar","Markdown_Ach"]
+  ["Inv_30d_Tar","Inv_30d_Ach"],
+  ["Inv_60d_Tar","Inv_60d_Ach"],
+  ["Inv_90d_Tar","Inv_90d_Ach"],
+  ["Markdown_Tar","Markdown_Ach"]
  ]},
- {t:"Space Management",f:[["NIP_Articles","NIP_Value"]]},
+ {t:"Space Mgmt",f:[["NIP_Articles","NIP_Value"]]},
  {t:"Own Brand",f:[["OwnBrand_Avail_Tar","OwnBrand_Avail_Ach"]]},
- {t:"Promotions",k:"p",f:[
-   ["Promo_Articles","Promo_Articles"],
-   ["Promo_Value","Promo_Value"]
- ]},
+ {t:"Promotions",k:"p",f:[["Promo_Articles","Promo_Articles"],["Promo_Value","Promo_Value"]]},
  {t:"Price Benchmark",f:[["PriceBench_Tar","PriceBench_Ach"]]},
  {t:"New Store Qty",f:[["NewStore_Qty_Tar","NewStore_Qty_Ach"]]},
  {t:"New Store Sales",f:[["NewStore_Sale_Tar","NewStore_Sale_Ach"]]}
@@ -121,14 +210,13 @@ function badge(g){return `<span class="badge ${g.toLowerCase()}">${g}</span>`}
 
 let DATA=[];
 
-async function load(){
+async function loadDashboard(){
   const raw=await fetch(URL).then(r=>r.json());
   const h=raw[0];
   DATA=raw.slice(1).map(r=>{
     const o={}; h.forEach((x,i)=>o[x]=r[i]); return o;
   });
-  initFilters();
-  render();
+  initFilters(); render();
 }
 
 function initFilters(){
@@ -138,7 +226,7 @@ function initFilters(){
 }
 
 function render(){
-  body.innerHTML='';
+  tbody.innerHTML='';
   const F=DATA.filter(d=>
     (!fState.value||d.State===fState.value) &&
     (!fCat.value||d.Category===fCat.value) &&
@@ -146,15 +234,13 @@ function render(){
   );
 
   const byEmp={};
-  F.forEach(r=>{
-    if(!byEmp[r.Emp_ID])byEmp[r.Emp_ID]=[];
-    byEmp[r.Emp_ID].push(r);
-  });
+  F.forEach(r=>{(byEmp[r.Emp_ID]??=[]).push(r)});
 
   for(const id in byEmp){
     const rows=byEmp[id].sort((a,b)=>a.Month_Year>b.Month_Year?1:-1);
     const c=rows.at(-1), p=rows.at(-2)||{};
-    body.innerHTML+=`
+
+    tbody.innerHTML+=`
 <tr class="row-merchant" onclick="toggle('m${id}',this)">
 <td>${c.Category}</td>
 <td colspan="7"><span class="toggle">▶</span> ${c.Emp_Name} (${id})</td>
@@ -162,34 +248,31 @@ function render(){
 
     GROUPS.forEach((g,gi)=>{
       let T=0,A=0,n=0;
-      g.f.forEach(([t,a])=>{
-        T+=+c[t]||0; A+=+c[a]||0; n++;
-      });
-      const tAvg=(T/n)||0, aAvg=(A/n)||0;
-      const pct=tAvg?((aAvg/tAvg)*100):0;
+      g.f.forEach(([t,a])=>{T+=+c[t]||0;A+=+c[a]||0;n++});
+      const tA=T/n||0,aA=A/n||0,pct=tA?(aA/tA)*100:0;
 
-      body.innerHTML+=`
+      tbody.innerHTML+=`
 <tr class="row-metric m${id}" style="display:none" onclick="${g.k?`toggle('s${id}${gi}',this)`:''}">
 <td></td><td></td>
 <td>${g.k?'<span class="toggle">▶</span> ':''}${g.t}</td>
-<td>${tAvg.toFixed(1)}</td>
-<td>${aAvg.toFixed(1)}</td>
-<td>${(aAvg-tAvg).toFixed(1)}</td>
-<td>-</td>
+<td>${tA.toFixed(1)}</td>
+<td>${aA.toFixed(1)}</td>
+<td>${(aA-tA).toFixed(1)}</td>
+<td>${p[g.f[0][1]]?(((aA-(+p[g.f[0][1]]||0))/(+p[g.f[0][1]]||1))*100).toFixed(1):'-'}</td>
 <td>${badge(grade(pct))}</td>
 </tr>`;
 
       if(g.k){
         g.f.forEach(([t,a])=>{
-          const av=+c[a]||0, tv=+c[t]||0;
-          body.innerHTML+=`
+          const tv=+c[t]||0,av=+c[a]||0;
+          tbody.innerHTML+=`
 <tr class="row-sub s${id}${gi}" style="display:none">
 <td></td><td></td>
 <td class="indent">${t.replace('_Tar','')}</td>
 <td>${tv}</td><td>${av}</td>
 <td>${av-tv}</td>
-<td>-</td>
-<td>${badge(grade(tv?((av/tv)*100):0))}</td>
+<td>${p[a]?(((av-(+p[a]||0))/(+p[a]||1))*100).toFixed(1):'-'}</td>
+<td>${badge(grade(tv?(av/tv)*100:0))}</td>
 </tr>`;
         });
       }
