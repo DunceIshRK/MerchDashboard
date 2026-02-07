@@ -2,21 +2,31 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Merchant Performance Dashboard</title>
+<title>Merchant Performance Portal</title>
 
 <style>
 body{font-family:system-ui;background:#f8fafc;margin:0;padding:15px}
-select,input{padding:8px;border-radius:6px;border:1px solid #cbd5e1}
+.tabs{display:flex;gap:10px;margin-bottom:15px}
+.tab-btn{flex:1;padding:12px;border-radius:10px;border:0;font-weight:700;cursor:pointer;background:#e2e8f0}
+.tab-btn.active{background:#ff9900;color:#fff}
+.tab{display:none}
+.tab.active{display:block}
+
 .filters{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
-table{border-collapse:collapse;width:100%;min-width:1200px;background:#fff}
+select,input{padding:8px;border-radius:6px;border:1px solid #cbd5e1}
+
+table{border-collapse:collapse;width:100%;min-width:1300px;background:#fff}
 th,td{padding:10px;border-bottom:1px solid #e5e7eb;font-size:12px}
 th{background:#1e293b;color:#fff;text-align:left}
+
 .row-merchant{background:#fff7ed;font-weight:800;cursor:pointer}
-.row-metric{background:#f8fafc;font-weight:700;cursor:pointer}
+.row-metric{background:#f1f5f9;font-weight:700;cursor:pointer}
 .row-sub{background:#fff;color:#64748b}
 .indent{padding-left:30px}
+
 .toggle{display:inline-block;width:18px;transition:.2s}
 .expanded .toggle{transform:rotate(90deg)}
+
 .badge{padding:4px 8px;border-radius:6px;font-size:10px;font-weight:800}
 .a{background:#dcfce7;color:#166534}
 .b{background:#fef9c3;color:#854d0e}
@@ -25,6 +35,20 @@ th{background:#1e293b;color:#fff;text-align:left}
 </head>
 
 <body>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('form',this)">ENTRY FORM</button>
+  <button class="tab-btn" onclick="showTab('dash',this)">DASHBOARD</button>
+</div>
+
+<!-- FORM (KEEP YOUR EXISTING FORM HERE AS-IS) -->
+<div id="form" class="tab active">
+  <p><b>⚠️ Keep your existing form here exactly as it is.</b></p>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dash" class="tab">
 
 <div class="filters">
   <select id="fState"></select>
@@ -46,61 +70,66 @@ th{background:#1e293b;color:#fff;text-align:left}
   <th>Grade</th>
 </tr>
 </thead>
-<tbody id="dash"></tbody>
+<tbody id="body"></tbody>
 </table>
 </div>
 
-<script>
-const URL="https://script.google.com/macros/s/AKfycbwZZ7P9vUGdysmuVDjqM-eHIGbNfEB1AgAqUSkdBa9nf2VyMDiwhezrO-NmHyyIiFVK/exec";
+</div>
 
-const METRICS=[
- {t:"Sales Performance",tar:"Sales_Tar",ach:"Sales_Ach"},
- {t:"RGM Performance",tar:"RGM_Tar",ach:"RGM_Ach"},
- {t:"Margin Management",k:"m",subs:[
-   {l:"GP1",t:"GP1_Tar",a:"GP1_Ach"},
-   {l:"GP2",t:"GP2_Tar",a:"GP2_Ach"}
+<script>
+const URL="YOUR_APPS_SCRIPT_URL_HERE";
+
+function showTab(id,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='dash') load();
+}
+
+const GROUPS=[
+ {t:"Sales",f:[["Sales_Tar","Sales_Ach"]]},
+ {t:"RGM",f:[["RGM_Tar","RGM_Ach"]]},
+ {t:"Margin",k:"m",f:[
+   ["GP1_Tar","GP1_Ach"],["GP2_Tar","GP2_Ach"]
  ]},
- {t:"Other Income",tar:"OtherInc_Tar",ach:"OtherInc_Ach"},
- {t:"Availability",k:"a",subs:[
-   {l:"Cat A",t:"Avail_A_Tar",a:"Avail_A_Ach"},
-   {l:"Cat B",t:"Avail_B_Tar",a:"Avail_B_Ach"},
-   {l:"Cat C",t:"Avail_C_Tar",a:"Avail_C_Ach"}
+ {t:"Other Income",f:[["OtherInc_Tar","OtherInc_Ach"]]},
+ {t:"Availability",k:"a",f:[
+   ["Avail_A_Tar","Avail_A_Ach"],
+   ["Avail_B_Tar","Avail_B_Ach"],
+   ["Avail_C_Tar","Avail_C_Ach"]
  ]},
- {t:"Inventory",k:"i",subs:[
-   {l:"30D",t:"Inv_30d_Tar",a:"Inv_30d_Ach"},
-   {l:"60D",t:"Inv_60d_Tar",a:"Inv_60d_Ach"},
-   {l:"90D+",t:"Inv_90d_Tar",a:"Inv_90d_Ach"},
-   {l:"Markdown",t:"Markdown_Tar",a:"Markdown_Ach"}
+ {t:"Inventory",k:"i",f:[
+   ["Inv_30d_Tar","Inv_30d_Ach"],
+   ["Inv_60d_Tar","Inv_60d_Ach"],
+   ["Inv_90d_Tar","Inv_90d_Ach"],
+   ["Markdown_Tar","Markdown_Ach"]
  ]},
- {t:"Space Management",tar:"NIP_Articles",ach:"NIP_Value"},
- {t:"Own Brand Avail",tar:"OwnBrand_Avail_Tar",ach:"OwnBrand_Avail_Ach"},
- {t:"Promotions",k:"p",subs:[
-   {l:"Articles",t:"Promo_Articles",a:"Promo_Articles"},
-   {l:"Value",t:"Promo_Value",a:"Promo_Value"}
+ {t:"Space Management",f:[["NIP_Articles","NIP_Value"]]},
+ {t:"Own Brand",f:[["OwnBrand_Avail_Tar","OwnBrand_Avail_Ach"]]},
+ {t:"Promotions",k:"p",f:[
+   ["Promo_Articles","Promo_Articles"],
+   ["Promo_Value","Promo_Value"]
  ]},
- {t:"Price Benchmark",tar:"PriceBench_Tar",ach:"PriceBench_Ach"},
- {t:"New Store Qty",tar:"NewStore_Qty_Tar",ach:"NewStore_Qty_Ach"},
- {t:"New Store Sales",tar:"NewStore_Sale_Tar",ach:"NewStore_Sale_Ach"}
+ {t:"Price Benchmark",f:[["PriceBench_Tar","PriceBench_Ach"]]},
+ {t:"New Store Qty",f:[["NewStore_Qty_Tar","NewStore_Qty_Ach"]]},
+ {t:"New Store Sales",f:[["NewStore_Sale_Tar","NewStore_Sale_Ach"]]}
 ];
 
 function grade(p){return p>=95?'A':p>=80?'B':'C'}
 function badge(g){return `<span class="badge ${g.toLowerCase()}">${g}</span>`}
 
-function growth(curr,prev){
-  if(!prev||prev==0)return '-';
-  return (((curr-prev)/prev)*100).toFixed(1);
-}
-
 let DATA=[];
 
-fetch(URL).then(r=>r.json()).then(raw=>{
+async function load(){
+  const raw=await fetch(URL).then(r=>r.json());
   const h=raw[0];
   DATA=raw.slice(1).map(r=>{
     const o={}; h.forEach((x,i)=>o[x]=r[i]); return o;
   });
   initFilters();
   render();
-});
+}
 
 function initFilters(){
   fState.innerHTML='<option value="">All States</option>'+[...new Set(DATA.map(d=>d.State))].map(x=>`<option>${x}</option>`).join('');
@@ -109,63 +138,60 @@ function initFilters(){
 }
 
 function render(){
-  dash.innerHTML='';
-  const filtered=DATA.filter(d=>
+  body.innerHTML='';
+  const F=DATA.filter(d=>
     (!fState.value||d.State===fState.value) &&
     (!fCat.value||d.Category===fCat.value) &&
     (!fMerchant.value||(`${d.Emp_Name} ${d.Emp_ID}`).toLowerCase().includes(fMerchant.value.toLowerCase()))
   );
 
   const byEmp={};
-  filtered.forEach(r=>{
+  F.forEach(r=>{
     if(!byEmp[r.Emp_ID])byEmp[r.Emp_ID]=[];
     byEmp[r.Emp_ID].push(r);
   });
 
   for(const id in byEmp){
     const rows=byEmp[id].sort((a,b)=>a.Month_Year>b.Month_Year?1:-1);
-    const curr=rows[rows.length-1];
-    const prev=rows[rows.length-2]||{};
-
-    dash.innerHTML+=`
+    const c=rows.at(-1), p=rows.at(-2)||{};
+    body.innerHTML+=`
 <tr class="row-merchant" onclick="toggle('m${id}',this)">
-<td>${curr.Category}</td>
-<td colspan="7"><span class="toggle">▶</span> ${curr.Emp_Name} (${id})</td>
+<td>${c.Category}</td>
+<td colspan="7"><span class="toggle">▶</span> ${c.Emp_Name} (${id})</td>
 </tr>`;
 
-    METRICS.forEach(m=>{
-      if(m.subs){
-        dash.innerHTML+=`
-<tr class="row-metric m${id}" style="display:none" onclick="toggle('s${id}${m.k}',this)">
+    GROUPS.forEach((g,gi)=>{
+      let T=0,A=0,n=0;
+      g.f.forEach(([t,a])=>{
+        T+=+c[t]||0; A+=+c[a]||0; n++;
+      });
+      const tAvg=(T/n)||0, aAvg=(A/n)||0;
+      const pct=tAvg?((aAvg/tAvg)*100):0;
+
+      body.innerHTML+=`
+<tr class="row-metric m${id}" style="display:none" onclick="${g.k?`toggle('s${id}${gi}',this)`:''}">
 <td></td><td></td>
-<td><span class="toggle">▶</span> ${m.t}</td>
-<td colspan="5"></td>
+<td>${g.k?'<span class="toggle">▶</span> ':''}${g.t}</td>
+<td>${tAvg.toFixed(1)}</td>
+<td>${aAvg.toFixed(1)}</td>
+<td>${(aAvg-tAvg).toFixed(1)}</td>
+<td>-</td>
+<td>${badge(grade(pct))}</td>
 </tr>`;
-        m.subs.forEach(s=>{
-          const a=+curr[s.a]||0,t=+curr[s.t]||0;
-          dash.innerHTML+=`
-<tr class="row-sub s${id}${m.k}" style="display:none">
+
+      if(g.k){
+        g.f.forEach(([t,a])=>{
+          const av=+c[a]||0, tv=+c[t]||0;
+          body.innerHTML+=`
+<tr class="row-sub s${id}${gi}" style="display:none">
 <td></td><td></td>
-<td class="indent">${s.l}</td>
-<td>${t}</td>
-<td>${a}</td>
-<td>${a-t}</td>
-<td>${growth(a,prev[s.a])}</td>
-<td>${badge(grade(t?((a/t)*100):0))}</td>
+<td class="indent">${t.replace('_Tar','')}</td>
+<td>${tv}</td><td>${av}</td>
+<td>${av-tv}</td>
+<td>-</td>
+<td>${badge(grade(tv?((av/tv)*100):0))}</td>
 </tr>`;
         });
-      }else{
-        const a=+curr[m.ach]||0,t=+curr[m.tar]||0;
-        dash.innerHTML+=`
-<tr class="row-metric m${id}" style="display:none">
-<td></td><td></td>
-<td>${m.t}</td>
-<td>${t}</td>
-<td>${a}</td>
-<td>${a-t}</td>
-<td>${growth(a,prev[m.ach])}</td>
-<td>${badge(grade(t?((a/t)*100):0))}</td>
-</tr>`;
       }
     });
   }
