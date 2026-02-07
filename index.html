@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Merchant Performance Portal</title>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
 :root { 
   --brand:#ff9900; --bg:#f8fafc; --text:#1e293b;
@@ -55,9 +58,10 @@ input,select{
   font-weight:bold; font-size:1.1rem; cursor:pointer; margin-top:10px;
 }
 .export-btn{
-  width:100%; padding:15px; background:var(--whatsapp);
+  flex:1; padding:15px; background:var(--whatsapp);
   color:#fff; border:none; border-radius:10px;
-  font-weight:bold; cursor:pointer; margin-bottom:15px
+  font-weight:bold; cursor:pointer; margin-bottom:15px;
+  transition: 0.2s;
 }
 
 /* Dashboard */
@@ -131,13 +135,22 @@ td{padding:10px;border-bottom:1px solid #f1f5f9}
 </div>
 
 <div id="dash" class="tab-content">
-<button class="export-btn" onclick="exportHD()">📸 EXPORT ULTRA-HD DASHBOARD (PNG)</button>
+<div style="display:flex; gap:10px;">
+  <button class="export-btn" onclick="exportHD()">📸 SHARE PNG (WHATSAPP)</button>
+  <button class="export-btn" style="background:#1e293b" onclick="exportPDF()">📄 DOWNLOAD PDF REPORT</button>
+</div>
+
 <div class="filters">
 <select id="fState"></select>
 <select id="fCat"></select>
 <input id="fMerchant" placeholder="Search Merchant Name or ID">
 </div>
-<div class="table-wrap">
+
+<div class="table-wrap" id="capture-area">
+<div id="pdf-header" style="padding: 20px; display:none; background: #fff;">
+  <h1 style="color:var(--brand); margin:0;">Merchant Performance Report</h1>
+  <p style="color:#64748b; margin:5px 0 0 0;">Stitched Cumulative Data | Generated: <span id="gen-date"></span></p>
+</div>
 <table>
 <thead>
 <tr>
@@ -206,15 +219,9 @@ function initFilters(){
 }
 
 function render(){
-  const targetTbody = document.getElementById('tbody'), 
-        fs = document.getElementById('fState').value, 
-        fc = document.getElementById('fCat').value, 
-        fm = document.getElementById('fMerchant').value.toLowerCase();
-  
+  const targetTbody = document.getElementById('tbody'), fs = document.getElementById('fState').value, fc = document.getElementById('fCat').value, fm = document.getElementById('fMerchant').value.toLowerCase();
   targetTbody.innerHTML='';
-  
   const F = DATA.filter(d=> (!fs||d.State===fs) && (!fc||d.Category===fc) && (!fm||(`${d.Emp_Name} ${d.Emp_ID}`).toLowerCase().includes(fm)) );
-  
   const merchantGroups={};
   F.forEach(row=>{
     const groupKey = row.Category + "_" + row.Emp_ID; 
@@ -254,11 +261,78 @@ function toggle(cls,row){
   row.classList.toggle('expanded');
 }
 
-function exportHD() {
-  const area = document.getElementById('dash');
-  const rows = area.querySelectorAll('tr');
-  rows.forEach(r => r.style.display = 'table-row');
-  // Note: html2canvas required for this function
+/* ---------------- EXPORT LOGIC ---------------- */
+async function exportPDF() {
+  const { jsPDF } = window.jspdf;
+  const area = document.getElementById('capture-area');
+  const btn = event.target;
+  const header = document.getElementById('pdf-header');
+  
+  btn.innerText = "Optimizing File Size...";
+  header.style.display = 'block';
+
+  // 1. Expand all rows for capture
+  const allRows = area.querySelectorAll('tr');
+  const originalDisplays = [];
+  allRows.forEach(r => { originalDisplays.push(r.style.display); r.style.display = 'table-row'; });
+
+  try {
+    // 2. Use scale 1.5 and JPEG compression to drop from 45MB to ~3MB
+    const canvas = await html2canvas(area, { 
+      scale: 2.5, 
+      useCORS: true,
+      backgroundColor: '#ffffff' 
+    });
+
+    // 3. Convert to JPEG instead of PNG for massive compression
+    const imgData = canvas.toDataURL('image/jpeg', 0.9); // 0.7 = 70% quality (ideal balance)
+    
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    // 4. Handle Multi-page if the table is very long
+    pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
+    
+    pdf.save(`Report_${new Date().toLocaleDateString()}.pdf`);
+  } finally {
+    // 5. Restore View
+    allRows.forEach((r, i) => r.style.display = originalDisplays[i]);
+    header.style.display = 'none';
+    btn.innerText = "📄 DOWNLOAD PDF REPORT";
+  }
+}
+
+async function exportHD() {
+  const area = document.getElementById('capture-area');
+  const btn = event.target;
+  const allRows = area.querySelectorAll('tr');
+  const originalDisplays = [];
+  
+  btn.innerText = "Optimizing for WhatsApp...";
+  
+  // Expand all for full report visibility
+  allRows.forEach(r => { 
+    originalDisplays.push(r.style.display); 
+    r.style.display = 'table-row'; 
+  });
+
+  try {
+    const canvas = await html2canvas(area, { 
+      scale: 2, // Keeps text sharp for zooming
+      useCORS: true,
+      backgroundColor: '#ffffff'
+    });
+
+    const link = document.createElement('a');
+    link.download = `Merchant_Report_${new Date().toLocaleDateString()}.jpg`;
+    // Using JPEG at 0.8 quality keeps the wide image under 2MB
+    link.href = canvas.toDataURL('image/jpeg', 0.8); 
+    link.click();
+  } finally {
+    allRows.forEach((r, i) => r.style.display = originalDisplays[i]);
+    btn.innerText = "📸 SHARE JPG (WHATSAPP)";
+  }
 }
 </script>
 </body>
